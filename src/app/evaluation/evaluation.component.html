@@ -1,0 +1,131 @@
+<div>
+    <h1 class="mt-3 mb-2" >EVALUATION OBJECTIFS  </h1>
+    <div *ngIf="!evalmidep" class="alert alert-danger my-2" >
+      Vous pouvez evaluer seulement dans l'etape 5 (debut de l'evaluation mi-parcours...)</div>
+
+    <h2  class="my-0" *ngIf="coll"> <span class="text-uppercase"> {{   coll.nom  }} </span> {{coll.prenom}}</h2>
+    <h3 class="font-weight-bold mt-2" *ngIf="coll && coll.poste" >{{coll.poste.intitulePoste}}</h3>
+
+    <div *ngIf="evalmidep" class=" my form-group" >
+
+        <label for="objexistant">Choisir Objectif  </label>
+        <select class="form-control "  [ngModel]="selectedDev" (ngModelChange)="onChangeDev($event)"  >
+            <option value=""></option>
+          <option  *ngFor="let evaluation of evaluations" (ngValue)="evaluation" >
+            {{  evaluation.objectif.nomObjectif  }} </option>
+        </select>
+      </div>
+
+<div *ngIf="add"  class="card mb-5 mt-2" >
+    <h2 class="card-header text-center"> Evaluation Collaborateur </h2>
+    <div class="card-body mt-0">
+      <div class="card-text">
+        <div class="row">
+            <div class="col-md-4 my form-group">
+            <label for="evalcollmi">Evaluation mi-parcours</label>
+            <div class="input-group mb-3">
+              <input type="text" id="evalcollmi" class="form-control"  readonly  [(ngModel)]="evalcollmi" >
+              <div class="input-group-append">
+                <span class="input-group-text" id="basic-addon2">%</span>
+              </div>
+            </div>
+          </div>
+    
+          <div class="col-md-8 my form-group">
+              <label for="commentairecolmi"> Commentaire</label>
+              <input type="text" id="commentairecolmi" class="form-control" readonly [(ngModel)]="commentairecolmi">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 my form-group">
+            <label for="evalcollmi">Evaluation Finale</label>
+            <div class="input-group mb-3">
+              <input type="text" id="evalcollfi" class="form-control"  readonly  [(ngModel)]="evalcollfi" >
+              <div class="input-group-append">
+                <span class="input-group-text" id="basic-addon2">%</span>
+              </div>
+            </div>
+          </div>
+    
+          <div class="col-md-8 my form-group">
+              <label for="commentairecolfi"> Commentaire</label>
+              <input type="text" id="commentairecolfi" class="form-control" readonly [(ngModel)]="commentairecolfi" >
+            </div>
+          </div>
+</div>
+</div>
+</div>
+
+<div *ngIf="add" class="card mb-5 mt-2" >
+    <h2 class="card-header text-center"> Evaluation Responsable </h2>
+    <div class="card-body mt-0">
+      <div class="card-text">
+        <form [formGroup]="evalForm" ngNativeValidate (ngSubmit)="onSubmitForm()">
+        <div class="row">
+            <div class="col-md-4 my form-group">
+            <label for="evalreslmi">Evaluation mi-parcours</label>
+            <div class="input-group mb-3">
+              <input type="text" id="evalreslmi" class="form-control" formControlName="evalreslmi" 
+              [ngClass]="{ 'is-invalid': submitted && f.evalreslmi.errors, 'is-valid': submitted && f.evalreslmi.valid}"
+                [(ngModel)]="evaresmi" [readonly]="!evalmi || !eval" >
+              <div class="input-group-append">
+                <span class="input-group-text" id="basic-addon2">%</span>
+              </div>
+            </div>
+           
+          </div>
+    
+          <div class="col-md-8 my form-group">
+              <label for="commentaireresmi"> Commentaire</label>
+              <input type="text" id="commentaireresmi" class="form-control"  formControlName="commentaireresmi" 
+              [ngClass]="{ 'is-invalid': submitted && f.commentaireresmi.errors, 'is-valid': submitted && f.commentaireresmi.valid}" 
+              [(ngModel)]="commi"  [readonly]="!evalmi || !eval" >
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 my form-group">
+            <label for="evalreslmi">Evaluation Finale</label>
+            <div class="input-group mb-3">
+              <input type="text" id="evalreslfi" class="form-control"  formControlName="evalreslfi" 
+              [ngClass]="{ 'is-invalid': submitted && f.evalreslfi.errors, 'is-valid': submitted && f.evalreslfi.valid}"
+                [(ngModel)]="evaresf"  [readonly]="!evalf || !eval" >
+              <div class="input-group-append">
+                <span class="input-group-text" id="basic-addon2">%</span>
+              </div>
+            </div>
+        
+          </div>
+    
+          <div class="col-md-8 my form-group">
+              <label for="commentaireresfi"> Commentaire</label>
+              <input type="text" id="commentaireresfi" class="form-control" formControlName="commentaireresfi" 
+              [ngClass]="{ 'is-invalid': submitted && f.commentaireresfi.errors, 'is-valid': submitted && f.commentaireresfi.valid}"
+              [(ngModel)]="comf"  [readonly]="!evalf || !eval" >
+            </div>
+          </div>
+
+          <div *ngIf="(evalmi || evalf) &&!eval" class="form-group text-center" >
+            <button  class="btn btn-lg btn-primary "  (click)="Evaluer()"> 
+                Evaluer le collaborateur
+            </button>
+            
+        </div>
+        
+          <div *ngIf="eval" class=" my form-group">
+            <button class="pull-left"    type="submit" class="btn btn-success" >Enregistrer l'evaluation</button>
+    
+            <button class="pull-right" style="float: right;"  type="submit" class="btn btn-primary" (click)="Annuler()">Annuler</button>
+           
+          </div>
+         
+           <!--  <div *ngIf="!coleval" class="alert alert-danger my-3" > Vous ne pouvez pas évaluer tant que le collaborateur ne s'est pas évalué </div>
+         -->
+         
+        </form>
+</div>
+</div>
+</div>
+
+</div>

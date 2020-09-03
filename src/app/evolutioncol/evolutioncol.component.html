@@ -1,0 +1,59 @@
+<h2 class="card-title mt-3">Evolution professionnelle souhaitée par le collaborateur</h2>
+<div class=" my form-group">
+    <label for="objexistant">Veuillez choisir votre type d'evolution </label>
+    <select class="form-control "  [ngModel]="selectedDev" (ngModelChange)="onChangeDev($event)"  >
+        <option value=""></option>
+        <option value="plus"> Plus de responsabilité</option>
+        <option value="metier">Changement de fonction (métier)</option>
+        <option value="nationale">Mobilité Nationale</option>
+        <option value="international">Mobilité à l'international</option>
+    </select>
+  </div>
+
+  <div  class="col my form-group">
+    <label for="poste"> Poste souhaitée éventuellement </label>
+    <input type="text" id="poste" class="form-control"  formControlName="poste" 
+   
+    [(ngModel)]="poste" >
+  </div>
+  <div  class="col my form-group">
+    <label for="mobilite"> Préférence en cas de mobilité géographique</label>
+    <input type="text" id="mobilite" class="form-control"  formControlName="mobilite" 
+  
+    [(ngModel)]="mobilite" >
+  </div>
+  <div  class="col my form-group">
+    <label for="echeance"> Echéance souhaitée</label>
+    <input type="text" id="mobilite" class="form-control"  formControlName="echeance" 
+   
+    [(ngModel)]="echeance" >
+  </div>
+
+
+<!-- 
+<p>Veuillez choisir votre type d'evolution :</p>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" value="plus" id="plus" name="plus">
+    <label class="form-check-label" for="plus">
+      Plus de responsabilité
+    </label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" value="metier" id="metier" name="metier">
+    <label class="form-check-label" for="metier">
+       Changement de fonction (métier)
+    </label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" value="nationale" id="nationale" name="nationale">
+    <label class="form-check-label" for="nationale">
+        Mobilité Nationale
+    </label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" value="international" id="international" name="international">
+    <label class="form-check-label" for="international">
+        Mobilité à l'international
+    </label>
+  </div>
+ -->

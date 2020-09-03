@@ -1,0 +1,49 @@
+
+    <mat-toolbar class="bg-primary">
+        <mat-toolbar-row style="  position: relative; background-color: #f5f5f5 ;">
+        
+          <img src="assets/image/logo.png" width="170px" height="150px" style="position: absolute; left: 2%; 
+          padding-left: 3px; padding-right: 0px;"  />
+           <button mat-icon-button   >
+            <mat-icon  (click)="sidenav.toggle()">menu</mat-icon>
+          </button>
+          
+    <h1 class="mx-auto"  style="color: black;"  >Entretien Annuel Individuel </h1>
+          
+        </mat-toolbar-row>
+      </mat-toolbar>
+          <mat-sidenav-container  >
+            <mat-sidenav #sidenav mode="side" opened style="background-color: #004f9e; ">
+              <mat-nav-list > 
+        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item [routerLink]="'./profilresponsable'"  > Profil Responsable </a>
+        <div class="dropdown-divider"></div>
+        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item [routerLink]="'./profilcollaborateur'"> Profil Collaborateur </a>
+        <div class="dropdown-divider"></div>
+        
+        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item [routerLink]="'./monprofil'"> Mon  Profil </a>
+        <div class="dropdown-divider"></div>
+        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item  (click)="logout()" >Se déconnecter</a>
+        <div class="dropdown-divider"></div>
+        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item (click)="sidenav.toggle()"  mat-list-item>Fermer</a>
+     
+              </mat-nav-list>
+            </mat-sidenav>
+          
+            <mat-sidenav-content  >
+              <div class="form-inline justify-content-end m-2" >
+                <label  for="date" class="pr-1">Année</label>
+                <input type="number" class="form-control mr-2" style="width: 100px;" nom="date"  id="date" [(ngModel)]="date" 
+               readonly  >   
+            <label  for="etape" class="pr-1">Phase</label>
+            <input type="text" class="form-control mr-2" style="width: 350px;" nom="etape"  id="etape" [(ngModel)]="etape" 
+            readonly  > 
+            </div>  
+                 
+              <div class="container" style="height: 88vh;">
+                 
+                <router-outlet></router-outlet>
+              </div>
+                  
+             
+            </mat-sidenav-content>
+          </mat-sidenav-container>

@@ -1,0 +1,148 @@
+<h1 class="mt-3 mb-2" >OBJECTIFS COLLECTIFS </h1>
+<div *ngIf=" ponderations && ponderations.length>0" class="mat-elevation-z8 table-responsive my-5">
+  <table mat-table matSort [dataSource]="dataSource2"  >
+       <ng-container matColumnDef="typeobjectif">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Type Objectif </th>
+        <td  mat-cell *matCellDef="let element index as i;">
+          <span *ngIf="element && element.evaluation && !element.evaluation.objectif.position "> Groupe</span>
+    <span *ngIf="element && element.evaluation && element.evaluation.objectif.position && element.evaluation.objectif.position.type=='division' ">
+             Division</span>
+          <span *ngIf="element.evaluation && element.evaluation.objectif.position && element.evaluation.objectif.position.type=='filiale' "> 
+            Filiale</span>
+         
+        </td>   
+      </ng-container>
+  
+      <ng-container matColumnDef="intituledivfil">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Intitulé Division <br> /Filiale</th>
+        <td  mat-cell *matCellDef="let element index as i;">
+          <span *ngIf="element && element.evaluation && !element.evaluation.objectif.position "> Groupe</span>
+    <span *ngIf="element && element.evaluation && element.evaluation.objectif.position && element.evaluation.objectif.position.type=='division' ">
+            {{element.evaluation.objectif.position.intitulePosition}}  </span>
+            <span *ngIf="element.evaluation && element.evaluation.objectif.position && element.evaluation.objectif.position.type=='filiale' "> 
+            {{element.evaluation.objectif.position.intitulePosition}} </span>
+         
+        </td>   
+      </ng-container>
+      
+      <ng-container matColumnDef="objectif">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Intitulé Objectif </th>
+        <td  mat-cell *matCellDef="let element index as i;">
+          <span *ngIf="element && element.evaluation "> {{element.evaluation.objectif.nomObjectif}} </span>
+        </td>   
+      </ng-container>
+    
+   
+  
+      <ng-container matColumnDef="ponderation">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Pondération </th>
+          <td mat-cell *matCellDef="let element index as i;">  {{element.ponderation}}
+        </td>
+  
+      </ng-container>
+  
+      <ng-container matColumnDef="plandaction">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Plan d'action </th>
+        <td mat-cell *matCellDef="let element index as i;">  {{element.planAction}}
+        </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="kpi">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> KPI </th>
+        <td mat-cell *matCellDef="let element index as i;"> {{element.evaluation.kpi}}
+        </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="cible">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cible </th>
+        <td mat-cell *matCellDef="let element index as i;">{{element.evaluation.cible}}
+        </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+    </table>
+  </div>
+
+<h1 class="mt-3 mb-2" >OBJECTIFS INDIVIDUELS </h1>
+<div  *ngIf="evaluations && evaluations.length >0 " class="mat-elevation-z8 ">
+  
+  <mat-form-field class="mat-form-field ml-2 mt-2" >
+    <mat-label><mat-icon class="mr-1 ">search</mat-icon>Recherche</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Ex.objectif1" >
+  </mat-form-field>
+  <table mat-table matSort [dataSource]="dataSource"  >
+
+    <ng-container matColumnDef="Numobjectif">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Num Objectif </th>
+      <td mat-cell *matCellDef="let element index as i;"> {{i+1}} </td>
+    </ng-container>
+  
+   
+    <ng-container matColumnDef="intituleObjectif">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Intitulé Objectif </th>
+      <td  mat-cell *matCellDef="let element index as i;">{{element.objectif.nomObjectif}}   
+      </td>
+ </ng-container>
+  
+   
+    <ng-container matColumnDef="ponderation">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Pondération </th>
+      <td mat-cell *matCellDef="let element index as i;">{{element.ponderation}}
+      </td>
+    </ng-container>
+  
+      
+    <ng-container matColumnDef="plandaction">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Plan d'action </th>
+      <td mat-cell *matCellDef="let element index as i;"> {{element.planAction}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="kpi">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> KPI </th>
+      <td mat-cell *matCellDef="let element index as i;"> {{element.kpi}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cible">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Cible </th>
+      <td mat-cell *matCellDef="let element index as i;">{{element.cible}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="echeancierDeRealisation">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Echeancier <br> De Realisation </th>
+      <td mat-cell *matCellDef="let element index as i;" >
+        <span class="ml-3">{{element.echeancierDeRealisation}}  </span> 
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="tauxAtteinte">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Taux d'atteinte   </th>
+      <td mat-cell *matCellDef="let element index as i;">
+        <span *ngIf="enableEditIndex !==i && element.tauxAtteinte " class="ml-3">   {{element.tauxAtteinte}} % </span>
+        <span *ngIf="enableEditIndex !==i && !element.tauxAtteinte" class="ml-3">   / </span>
+        <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="tauxAtteinte" required >
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="action1">
+      <th mat-header-cell *matHeaderCellDef class="mx-auto " >Action1</th>
+      <td mat-cell *matCellDef="let element index as i;" >
+   <button *ngIf="enableEdit && enableEditIndex == i" id="saveBtn" class="btn btn-primary btn-sm px-3 mr-3 " (click)="saveSegment(element)"
+    type="submit">
+          Enregistrer</button>
+  <button *ngIf="enableEdit && enableEditIndex == i" (click)="cancel(i) " class="btn btn-secondary btn-sm px-3 ">Annuler</button>
+
+        <button *ngIf="!enableEdit" mat-button class="btn btn-primary btn-sm px-1 "  (click)="enableEditMethod($event,i, element) ">
+          <mat-icon >launch</mat-icon>Modifier</button>
+        
+      </td>
+    </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>

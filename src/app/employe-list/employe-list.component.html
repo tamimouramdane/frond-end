@@ -1,0 +1,191 @@
+<div *ngIf="add"  class="card mb-5 mt-2" >
+
+  <h2 class="card-header text-center">Nouveau Employe </h2>
+  <div class="card-body mt-0">
+    <div class="card-text">
+  <form [formGroup]="employeForm" ngNativeValidate (ngSubmit)="onSubmitForm()">
+    <h2 >Etat Civil</h2>
+    <div class="row my form-group">
+      <div class="col">
+          <label for="nom">Nom</label>
+          <input type="text" id="nom" class="form-control" formControlName="nom" placeholder="nom "  
+          [ngClass]="{ 'is-invalid': submitted && f.nom.errors, 'is-valid': submitted && f.nom.valid}"  >
+          <div *ngIf="submitted && f.nom.errors" class="alert alert-danger my-2" >
+            Ce champ est obligatoire</div> 
+        </div>
+    
+        <div class="col">
+          <label for="prenom">Prénom</label>
+          <input type="text" id="prenom" class="form-control" formControlName="prenom" placeholder="prenom " 
+          [ngClass]="{ 'is-invalid': submitted && f.prenom.errors, 'is-valid': submitted && f.prenom.valid}">
+          <div *ngIf="submitted && f.prenom.errors" class="alert alert-danger my-2" >
+            Ce champ est obligatoire</div> 
+        </div>
+    </div>
+
+    <h2>Poste</h2>
+    <div class="row my form-group">
+        <div class="col">
+          <label for="intituleposte"> Poste occupé</label>
+          <select class="form-control " id="intituleposte" formControlName="intituleposte">
+            <option *ngFor="let poste of postes" (ngValue)="poste" > {{poste.intitulePoste}} </option>
+          </select>
+      </div>
+ 
+      <div class="col">
+          <label for="responsable"> Responsable</label>
+          <select class="form-control" id="responsable" formControlName="responsable">
+            <option  value="aucun"  > Aucun</option>
+        
+            <option *ngFor="let employe of employes" (ngValue)="employe" > {{employe.nom}} -- {{employe.prenom}} </option>
+          </select>
+      </div>
+    </div>
+
+    <h2>Compte</h2>
+    <div class="row my form-group">
+      <div class="col-6">
+        <label for="email">Email</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <div class="input-group-text">@</div>
+          </div>
+          <input type="email" id="email" class="form-control" formControlName="email" placeholder="email "   
+        [ngClass]="{ 'is-invalid': submitted && f.email.errors, 'is-valid': submitted && f.email.valid}">
+        </div>
+        <div *ngIf="submitted && f.email.errors" class="alert alert-danger my-2" >
+          Ce champ est obligatoire</div> 
+        <div *ngIf="emailexiste" class="alert alert-danger my-2" >Cet email est déjà utilisé  </div>
+      </div>
+
+    <div class="col">
+        <label for="username">User Name</label>
+        <input type="text" formControlName="username" placeholder="username" name="username" class="form-control" id="username"
+        [ngClass]="{ 'is-invalid': submitted && f.username.errors, 'is-valid': submitted && f.username.valid}">
+        <div *ngIf="submitted && f.username.errors" class="alert alert-danger my-2" >
+          Ce champ est obligatoire</div> 
+        <div *ngIf="usernameexiste" class="alert alert-danger my-2" >Ce user name est déjà utilisé  </div>
+      </div>
+   
+      <div class="col">
+        <label for="password">Password</label>
+        <input type="password" id="password" class="form-control" formControlName="password" placeholder="password " 
+        [ngClass]="{ 'is-invalid': submitted && f.password.errors, 'is-valid': submitted && f.password.valid}"  >
+        <div *ngIf="submitted && f.password.errors" class="alert alert-danger my-2" >
+          Ce champ est obligatoire</div> 
+      
+      </div>   
+    </div>
+   
+    <div class=" my form-group">
+      <button class="pull-left"    type="submit" class="btn btn-success">Ajouter l'employé</button>
+      <button class="pull-right" style="float: right;"  type="submit" class="btn btn-primary" (click)="Annuler()" >Annuler</button>
+    </div>
+  </form>
+</div>
+</div>
+</div>
+
+<ng-template #callAPIDialog>
+  <h2 matDialogTitle>Remarque</h2>
+  <mat-dialog-content class="mat-typography">
+    <h3>Etes-vous sûr de vouloir supprimer le salarié ?</h3>
+  
+  </mat-dialog-content>
+  <mat-dialog-actions class="row" align="end">
+      <button mat-button matDialogClose="no" class=" col btn btn.btn-primary pull-left">Annuler</button>
+      <button mat-button matDialogClose="yes" class=" col btn btn-danger pull-right">Supprimer</button>
+  </mat-dialog-actions>
+</ng-template>
+
+
+
+<button  type="button" class="my btn btn-success my-3" (click)="ajouterEmploye()" *ngIf="!add" [disabled]="!postes[0]">Ajouter Employe</button>
+
+  <div *ngIf="!postes[0]" class="alert alert-danger" > Vous devez créér des postes avant de créér des employes </div>
+
+
+<h2 class="card-title">Les salariés de l'entreprise </h2>
+<div class="mat-elevation-z8">
+<mat-form-field class="mat-form-field ml-2 mt-2" >
+  <mat-label><mat-icon class="mr-1 ">search</mat-icon>Recherche</mat-label>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Ex.Ahmed" >
+</mat-form-field>
+<table mat-table matSort [dataSource]="dataSource"  >
+
+  <ng-container matColumnDef="Numemploye">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Num Salarié </th>
+    <td mat-cell *matCellDef="let element index as i;"> {{i+1}} </td>
+  </ng-container>
+
+ 
+  <ng-container matColumnDef="nom">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Nom Salarié </th>
+    <td  mat-cell *matCellDef="let element index as i;">
+      <span *ngIf="enableEditIndex !==i"> {{element.nom}} </span>
+      <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table"  type="text"  [(ngModel)]="nom" required >
+    </td>
+
+    
+  </ng-container>
+
+ 
+  <ng-container matColumnDef="prenom">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>  Prénom Salarié </th>
+    <td mat-cell *matCellDef="let element index as i;">
+      <span *ngIf="enableEditIndex !==i">  {{element.prenom}} </span>
+      <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="prenom" required >
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="posteoccupe">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Poste  Occupé </th>
+    <td mat-cell *matCellDef="let element index as i;">
+      <span *ngIf="!element.poste && enableEditIndex !==i">  /</span>
+      <span *ngIf="element.poste && enableEditIndex !==i">  {{element.poste.intitulePoste}} </span>
+     <select *ngIf="enableEdit && enableEditIndex ==i"  class="input-table" [ngModel]="selectedposte" (ngModelChange)="onChangeposte($event)"  >
+        <option *ngFor="let poste of postes" (ngValue)="poste" > {{poste.intitulePoste}} </option>
+      </select>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="responsable">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Responsable   </th>
+    <td mat-cell *matCellDef="let element index as i;">
+      <span *ngIf="!element.superieur && enableEditIndex !==i">  /</span>
+      <span *ngIf="element.superieur && enableEditIndex !==i">  {{element.superieur.nom }} -- {{element.superieur.prenom}} </span>
+     <select *ngIf="enableEdit && enableEditIndex ==i"  class="input-table" [ngModel]="selectedresp" (ngModelChange)="onChangeresp($event)"  >
+      <option  value="aucun"  > Aucun</option>    
+      <option *ngFor="let employe of employes" (ngValue)="employe" > {{employe.nom}} -- {{employe.prenom}} </option>
+      </select>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="action1">
+    <th mat-header-cell *matHeaderCellDef class="mx-auto " >Action1</th>
+    <td mat-cell *matCellDef="let element index as i;" >
+ <button *ngIf="enableEdit && enableEditIndex == i" id="saveBtn" class="btn btn-primary btn-sm px-3 mr-3 " (click)="saveSegment(element)"
+  type="submit">
+        Enregistrer</button>
+<button *ngIf="enableEdit && enableEditIndex == i" (click)="cancel(i) " class="btn btn-secondary btn-sm px-3 ">Annuler</button>
+
+      <button *ngIf="!enableEdit" mat-button class="btn btn-primary btn-sm px-1 "  (click)="enableEditMethod($event,i, element) ">
+        <mat-icon >launch</mat-icon>Modifier</button>
+      
+    </td>
+  </ng-container>
+
+  <ng-container   matColumnDef="action2">
+    <th mat-header-cell *matHeaderCellDef class="mx-auto " >Action2</th>
+    <td mat-cell *matCellDef="let element index as i;" >
+      <button *ngIf="!enableEdit" mat-button class="btn btn-danger btn-sm px-1 "   
+      (click)="callAPI(element)">
+        <mat-icon>delete_outline</mat-icon>Supprimer</button>  
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>

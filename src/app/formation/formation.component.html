@@ -1,0 +1,133 @@
+
+ <div *ngIf="add"  class="card mb-5 mt-2" >
+  <h2 class="card-header text-center">Nouvelle Formation  </h2>
+  <div class="card-body mt-0">
+    <div class="card-text">
+<form [formGroup]="formationForm" ngNativeValidate (ngSubmit)="onSubmitForm()">
+   <div class="row">
+  <div class="col my form-group">
+    <label for="nomFormation">Intitulé Formation </label>
+    <input type="text" id="nomFormation" class="form-control" formControlName="nomFormation" placeholder="nom Formation"
+       [ngClass]="{ 'is-invalid': submitted && f.nomFormation.errors, 'is-valid': submitted && f.nomFormation.valid}"  >
+       <div *ngIf="nomexiste" class="alert alert-danger my-2" >Ce nom de formation est déjà utilisé  </div>
+  </div>
+  
+
+  <div class="col my form-group">
+    <label for="objectifPrevu">Objectif Prévu </label>
+    <input type="text" id="objectifPrevu" class="form-control" formControlName="objectifPrevu" placeholder="objectif Prevu " 
+    [ngClass]="{ 'is-invalid': submitted && f.objectifPrevu.errors, 'is-valid': submitted && f.objectifPrevu.valid}"   > 
+  </div>
+ 
+</div>
+  <div class=" my form-group">
+  
+    <button  class="pull-left"   type="submit" class="btn btn-success"  >Ajouter la formation</button>
+
+    <button class="pull-right" style="float: right;"  type="submit" class="btn btn-primary" (click)="Annuler()" >Annuler</button>
+  </div>
+
+</form>
+</div>
+</div>
+</div>
+
+<ng-template #callAPIDialog>
+    <h2 matDialogTitle>Remarque</h2>
+    <mat-dialog-content class="mat-typography">
+      <h3>Etes-vous sûr de vouloir supprimer la formation ?</h3>
+    
+    </mat-dialog-content>
+    <mat-dialog-actions class="row" align="end">
+        <button mat-button matDialogClose="no" class=" col btn btn.btn-primary pull-left">Annuler</button>
+        <button mat-button matDialogClose="yes" class=" col btn btn-danger pull-right">Supprimer</button>
+    </mat-dialog-actions>
+  </ng-template>
+  
+  
+  <h2 class="card-title my-2">Formations</h2>
+  <div *ngIf="!objinddep" class="alert alert-danger my-2" >
+    Vous pouvez fixer les formations seulement dans l'etape 3 (debut de fixation...) </div>  
+
+  <button type="button"  class="my btn btn-success my-3 " (click)="ajouterFormation()" *ngIf="!add && objind"
+  [disabled]="formations && formations.length >=3">Ajouter Formation</button>
+
+  <div *ngIf="objind &&formations && formations.length>0" class="mat-elevation-z8">
+  <mat-form-field class="mat-form-field ml-2 mt-2" >
+    <mat-label><mat-icon class="mr-1 ">search</mat-icon>Recherche</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Ex.direction1" >
+  </mat-form-field>
+  <table mat-table matSort [dataSource]="dataSource"  >
+  
+    <ng-container matColumnDef="NumFormation">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Num Formation </th>
+      <td mat-cell *matCellDef="let element index as i;"> {{i+1}} </td>
+    </ng-container>
+   
+    <ng-container matColumnDef="nomFormation">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Intitulé Formation </th>
+      <td mat-cell *matCellDef="let element index as i;">  {{element.nomFormation}} </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="objectifPrevu">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Objectif Prévu  </th>
+      <td mat-cell *matCellDef="let element index as i;">
+        <span *ngIf="enableEditIndex !==i">  {{element.objectifPrevu}} </span>
+        <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="objectifPrevu" required >
+      </td>
+    </ng-container>
+
+    <ng-container   matColumnDef="action2">
+      <th mat-header-cell *matHeaderCellDef class="mx-auto " >Action2</th>
+      <td mat-cell *matCellDef="let element index as i;" >
+        <button *ngIf="!enableEdit" mat-button class="btn btn-danger btn-sm px-1 "     (click)="callAPI(element)">
+          <mat-icon>delete_outline</mat-icon>Supprimer</button>  
+      </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="evalColl">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Evaluation Collaborateur  </th>
+      <td mat-cell *matCellDef="let element index as i;">  {{element.evalColl}}  </td>
+    </ng-container>
+  
+   
+       
+    <ng-container matColumnDef="evalResp">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Evaluation Responsable </th>
+      <td mat-cell *matCellDef="let element index as i;">
+        <span *ngIf="enableEditIndex !==i">  {{element.evalResp}} </span>
+        <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="evalResp" required >
+        
+        <select class="form-control " formControlName="intitulemere"  [ngModel]="selectedDevice" (ngModelChange)="onChange($event)"  >
+          <option  value=""  > </option>
+          <option value="1"> Non atteint </option>
+          <option value="2"> Partiel</option>
+          <option value="3"> Atteint  </option>
+          <option value="4"> Dépassé </option>
+        </select>
+      </td>
+    </ng-container>
+
+  
+    <ng-container matColumnDef="action1">
+      <th mat-header-cell *matHeaderCellDef class="mx-auto " >Action1</th>
+      <td mat-cell *matCellDef="let element index as i;" >
+   <button *ngIf="enableEdit && enableEditIndex == i" id="saveBtn" class="btn btn-primary btn-sm px-3 mr-3 " (click)="saveSegment(element)"
+    type="submit">
+          Enregistrer</button>
+  <button *ngIf="enableEdit && enableEditIndex == i" (click)="cancel(i) " class="btn btn-secondary btn-sm px-3 ">Annuler</button>
+  
+        <button *ngIf="!enableEdit" mat-button class="btn btn-primary btn-sm px-1 "  (click)="enableEditMethod($event,i, element) ">
+          <mat-icon >launch</mat-icon>Evaluer</button>
+        
+      </td>
+    </ng-container>
+  
+  
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>

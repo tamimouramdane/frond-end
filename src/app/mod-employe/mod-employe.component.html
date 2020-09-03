@@ -1,0 +1,46 @@
+<div class="col-sm-8 col-sm-offset-2">
+    <form [formGroup]="employeForm" ngNativeValidate (ngSubmit)="onSubmitForm()">
+        <div class="form-group">
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" class="form-control" formControlName="nom"
+             placeholder="nom "   required>
+          </div>
+      
+          <div class="form-group">
+            <label for="prenom">Prénom</label>
+            <input type="text" id="prenom" class="form-control" formControlName="prenom"
+             placeholder="prenom "   required>
+          </div>
+
+          <div class="form-group">
+            <label for="intituleposte"> Poste occupé</label>
+            <select class="form-control form-control-lg" id="intituleposte" formControlName="intituleposte">
+              <option *ngFor="let poste of postes" [ngValue]="poste.intitulePoste" > {{poste.intitulePoste}} </option>
+            </select>
+        </div>
+   
+        <div class="form-group">
+            <label for="responsable"> Responsable</label>
+            <select class="form-control form-control-lg" id="responsable" formControlName="responsable">
+              <option  value="aucun"  > Aucun</option>
+              <option *ngFor="let employe of employes" [ngValue]="employe" > {{employe.nom}}  -- {{employe.prenom}} </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" class="form-control" formControlName="email"
+           placeholder="email "   required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" class="form-control" formControlName="password"
+           placeholder="password "   required>
+        </div>
+
+    
+
+      <button   type="submit" class="btn btn-primary">Ajouter l'employé</button>
+    </form>
+  </div>

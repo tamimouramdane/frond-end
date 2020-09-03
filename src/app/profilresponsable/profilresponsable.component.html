@@ -1,0 +1,86 @@
+ 
+ 
+    <h2 class="card-title mt-3">Mes Collaborateurs</h2>
+    <div class="mat-elevation-z8 ">
+  <mat-form-field class="mat-form-field ml-2 mt-2" >
+    <mat-label><mat-icon class="mr-1 ">search</mat-icon>Recherche</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Ex.Adel" >
+  </mat-form-field>
+  <table mat-table matSort [dataSource]="dataSource"  >
+
+    <ng-container matColumnDef="Numcoll">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Num Collaborateur </th>
+      <td mat-cell *matCellDef="let element index as i;"> {{i+1}} </td>
+    </ng-container>
+  
+   
+    <ng-container matColumnDef="nom">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Nom  </th>
+      <td  mat-cell *matCellDef="let element index as i;">{{element.nom}} 
+      </td>
+     </ng-container>
+
+     <ng-container matColumnDef="prenom">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Prénom </th>
+      <td mat-cell *matCellDef="let element index as i;"> {{element.prenom}}
+      </td>
+    </ng-container>
+  
+    
+    <ng-container matColumnDef="poste">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Poste </th>
+      <td mat-cell *matCellDef="let element index as i;">
+        <span *ngIf="element.poste">{{element.poste.intitulePoste}} </span> 
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Action </th>
+      <td mat-cell *matCellDef="let element index as i;"> <button type="button" class="btn btn-primary"  (click)="onFixer(element)">
+        Consulter </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+
+
+<!-- 
+    <div class="card-body">
+      <h2 class="card-title">Mes Collaborateurs</h2>
+      <div class="card-text">
+  <div *ngIf="colls.length > 0">
+  <table class="table">
+    <thead>
+      <tr style="margin-top: 15px; margin-bottom: 15px;">
+        <th scope="col">Nom</th>
+        <th scope="col">Prénom</th>
+        <th scope="col">Poste</th>
+        <th scope="col">Action1</th>
+        
+      </tr>
+    </thead>
+    <tbody>
+      <tr   style="margin-top: 15px; margin-bottom: 15px;" *ngFor="let coll of colls" >
+        <th scope="row"> {{coll.nom}}</th>
+        <td> {{coll.prenom}}</td>
+        <td *ngIf="coll.poste">{{ coll.poste.intitulePoste }}</td>
+        <td *ngIf="!coll.poste">   /</td>
+        <td> <button type="button" class="btn btn-primary"  (click)="onFixer(coll)"   >Fixer Objectifs</button></td>
+       
+      </tr>
+    </tbody>
+  </table>
+</div>
+</div>
+</div>
+
+</div>
+-->
+<!--  [routerLink]="['/evaluation',':'+selected.user.id]"
+<app-fixation *ngIf="fixation" [coll]="selected" (messageEvent)="receiveMessage($event)"></app-fixation>
+-->

@@ -1,0 +1,71 @@
+
+    <mat-toolbar class="bg-primary">
+      <mat-toolbar-row style="  position: relative; background-color: #f5f5f5;">
+        
+        <img src="assets/image/logo.png" width="170px" height="150px" style="position: absolute; left: 2%; 
+        padding-left: 3px; padding-right: 0px;"  />
+         <button mat-icon-button   >
+          <mat-icon  (click)="sidenav.toggle()">menu</mat-icon>
+        </button> 
+  <h1 class="mx-auto"  style=" color: black;"  >Entretien Annuel Individuel </h1>
+        </mat-toolbar-row>
+      </mat-toolbar>
+          <mat-sidenav-container >
+            <mat-sidenav #sidenav mode="side" opened style="background-color: #004f9e;" >
+              <mat-nav-list > 
+        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item [routerLink]="'./divisions'"  > Divisions </a>
+        <div class="dropdown-divider"></div>
+        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item routerLinkActive="active" [routerLink]="'./filiales'"> Filiales  </a>
+        <div class="dropdown-divider"></div>
+        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item [routerLink]="'./directions'"> Directions </a>
+        <div class="dropdown-divider"></div>
+        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item [routerLink]="'./services'"> Services </a>
+        <div class="dropdown-divider"></div>
+        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item [routerLink]="'./postes'"> Postes </a>
+        <div class="dropdown-divider"></div>
+        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item [routerLink]="'./employes'"> Employes </a>
+        <div class="dropdown-divider"></div>
+        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item [routerLink]="'./objectifs'"> Objectifs </a>
+        <div class="dropdown-divider"></div>
+        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item  (click)="logout()">Se déconnecter</a>
+        <div class="dropdown-divider"></div>
+        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item (click)="sidenav.toggle()"  mat-list-item>Fermer</a>
+     
+              </mat-nav-list>
+            </mat-sidenav>
+          
+            <mat-sidenav-content  >
+           
+              <div class="container "style="height: 88vh; " >
+                <div class="form-inline justify-content-end m-2" >
+                  <label  for="date" class="pr-1">Année</label>
+                  <input type="number" class="form-control mr-2" style="width: 100px;" nom="date"  id="date" [(ngModel)]="date" 
+                  [readonly]="selectedDev > 1 && selectedDev < 11" 
+                  [ngClass]="{ 'is-invalid': errdate}"   >   
+                  <div *ngIf="errdate" class="alert alert-danger my-2" >Veuillez saisir une année supérieure à celle d'avant </div> 
+                  <!-- 
+                  <button *ngIf="selectedDev==1" type="submit" class="btn btn-primary mr-2" (click)="Commencer()">Commencer</button>
+                  -->
+                  <label  for="etape" class="pr-1">Phase</label>
+                  <select *ngIf="!errdate" class="form-control pr-2 "  nom="etape"  id="etape" 
+                   [ngModel]="selectedDev" (ngModelChange)="onChangeDev($event)"   >
+                  
+                    <option  value="1" [disabled]="selectedDev !=10"  > Initialisation</option>
+                    <option  value="2" [disabled]="selectedDev !=1" > Fixation Objectifs Collectifs</option>
+                    <option  value="3" [disabled]="selectedDev !=2 || obcol"  >Debut de la Fixation des Objectifs Individuels</option>
+                    <option  value="4" [disabled]="selectedDev !=3" >Fin de la Fixation des Objectifs Individuels </option>
+                    <option  value="5" [disabled]="selectedDev !=4"  >Debut de l'Evaluation Mi-parcours  </option>
+                    <option  value="6" [disabled]="selectedDev !=5"  >Fin de l'Evaluation Mi-parcours   </option>
+                    <option value="7" [disabled]="selectedDev !=6" > Debut de l'Evaluation Finale</option>
+                    <option value="8" [disabled]="selectedDev !=7" >Fin de l'Evaluation Finale</option>
+                    <option value="9" [disabled]="selectedDev !=8" >Debut de l'Evolution</option>
+                    <option value="10" [disabled]="selectedDev !=9">Fin de l'Evolution</option>
+                    
+                  </select>
+              </div>   
+                  <router-outlet ></router-outlet>    
+                       
+              </div>
+              
+            </mat-sidenav-content>
+          </mat-sidenav-container>

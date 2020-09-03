@@ -1,0 +1,158 @@
+<div   class="card mb-5 mt-2" >
+
+  <h2 class="card-header text-center">Mon Profil </h2>
+  <div class="card-body mt-0">
+    <div class="card-text">
+      <h2>Poste</h2>
+      <div class="row my form-group">
+          <div class="col">
+            <label for="intituleposte"> Poste occupé</label>
+            <input  type="text" id="poste" class="form-control"  [(ngModel)]="poste" readonly >
+        </div>
+   
+        <div class="col">
+            <label for="responsable"> Responsable</label>
+            <input *ngIf="resp" type="text" id="responsable" class="form-control" [(ngModel)]="resp" readonly >
+            <input *ngIf="!resp" type="text" id="responsable" class="form-control"  placeholder="aucun" readonly >
+        </div>
+      </div>
+
+  <form [formGroup]="employeForm" ngNativeValidate (ngSubmit)="onSubmitForm()">
+    <h2 >Etat Civil</h2>
+    <div class="row my form-group">
+      <div class="col">
+          <label for="nom">Nom</label>
+          <input type="text" id="nom" class="form-control" formControlName="nom" placeholder="nom "  
+          [ngClass]="{ 'is-invalid': submitted && f.nom.errors, 'is-valid': submitted && f.nom.valid}" [(ngModel)]="nom" [readonly]="!mod"  >
+        </div>
+    
+        <div class="col">
+          <label for="prenom">Prénom</label>
+          <input type="text" id="prenom" class="form-control" formControlName="prenom" placeholder="prenom " 
+          [ngClass]="{ 'is-invalid': submitted && f.prenom.errors, 'is-valid': submitted && f.prenom.valid}" [(ngModel)]="prenom" 
+          [readonly]="!mod" >
+        </div>
+    </div>
+
+ 
+
+    <h2>Compte</h2>
+    <div class="row my form-group">
+      <div class="col-6">
+        <label for="email">Email</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <div class="input-group-text">@</div>
+          </div>
+          <input type="email" id="email" class="form-control" formControlName="email" placeholder="email "   
+        [ngClass]="{ 'is-invalid': submitted && f.email.errors, 'is-valid': submitted && f.email.valid}" [(ngModel)]="email" 
+        [readonly]="!mod" >
+        </div>
+      </div>
+
+    <div class="col">
+        <label for="username">User Name</label>
+        <input type="text" formControlName="username" placeholder="username" name="username" class="form-control" id="username"
+        [ngClass]="{ 'is-invalid': submitted && f.username.errors, 'is-valid': submitted && f.username.valid}" [(ngModel)]="username"
+        [readonly]="!mod"  >
+      </div>
+      <!-- 
+      <div class="col">
+        <label for="password">Password</label>
+        <input type="password" id="password" class="form-control" formControlName="password" placeholder="password " 
+        [ngClass]="{ 'is-invalid': submitted && f.password.errors, 'is-valid': submitted && f.password.valid}" [(ngModel)]="password"  >
+      
+      </div>   -->
+    </div>
+    <div *ngIf="!mod" class="form-group text-center" >
+            <button  class="btn btn-lg btn-primary "  (click)="Mod()"> 
+                Modifier mon profil
+            </button>
+            
+        </div>
+        
+          <div *ngIf="mod" class=" my form-group">
+            <button class="pull-left"    type="submit" class="btn btn-success" >Enregistrer les modifications</button>
+      <button class="pull-right" style="float: right;"  type="submit" class="btn btn-primary" (click)="Annuler()" >Annuler</button>
+           
+          </div>
+
+  </form>
+</div>
+</div>
+</div>
+
+
+<!--
+<h1>mon profil</h1>
+<div class="col-sm-8 col-sm-offset-2">
+    <form [formGroup]="employeForm" ngNativeValidate (ngSubmit)="onSubmitForm()">
+      <div class=" my form-group">
+      <h2>Etat Civil</h2>
+        <div class=" my form-group">
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" class="form-control" formControlName="nom"
+             placeholder="nom "  ngModel required >
+          </div>
+      
+          <div class="my form-group">
+            
+            <label for="prenom">Prénom</label>
+            <input type="text" id="prenom" class="form-control" formControlName="prenom"
+             placeholder="prenom "  ngModel required>
+          </div>
+      </div>
+     
+      <div class=" my form-group">
+          <h2>Poste</h2>
+          <div class="my form-group">
+            <label for="intituleposte"> Poste occupé</label>
+            <select class="form-control form-control-lg" id="intituleposte" formControlName="intituleposte">
+              <option *ngFor="let poste of postes" (ngValue)="poste" > {{poste.intitulePoste}} </option>
+            </select>
+        </div>
+   
+        <div class="my form-group">
+            <label for="responsable"> Responsable</label>
+            <select class="form-control form-control-lg" id="responsable" formControlName="responsable">
+              <option  value="aucun"  > Aucun</option>
+          
+              <option *ngFor="let employe of employes" (ngValue)="employe" > {{employe.nom}} -- {{employe.prenom}} </option>
+            </select>
+        </div>
+      </div>
+
+      <div class=" my form-group">
+        <h2>Compte</h2>
+        
+        <div class="form-group">
+          <label for="username">User Name</label>
+          <input type="text" formControlName="username" placeholder="username" name="username" class="form-control" id="username"
+          required>
+        </div>
+     
+        
+        <div class="my form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" class="form-control" formControlName="email"
+           placeholder="email "  ngModel required>
+        </div>
+
+        <div class=" my form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" class="form-control" formControlName="password"
+           placeholder="password "  ngModel required>
+        </div>
+        </div>
+     
+        <div class=" my form-group">
+         
+          <button class="pull-left"    type="submit" class="btn btn-primary"> Enregistrer les Modifications</button>
+
+          <button class="pull-right" style="float: right;"  type="submit" class="btn btn-primary" >Annuler</button>
+        </div>
+      
+     
+    </form>
+  </div>
+ -->

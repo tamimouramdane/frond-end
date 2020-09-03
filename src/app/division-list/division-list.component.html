@@ -1,0 +1,184 @@
+
+
+                
+  <div *ngIf="add"  class="card mb-5 mt-2" >
+      <h2 class="card-header text-center">Nouvelle Division  </h2>
+      <div class="card-body mt-0">
+        <div class="card-text">
+    <form [formGroup]="divisionForm" ngNativeValidate (ngSubmit)="onSubmitForm()">
+       <div class="row">
+      <div class="col my form-group">
+        <label for="codedivision">Code Division</label>
+        <input type="text" id="codedivision" class="form-control" formControlName="codedivision" placeholder="code division"
+           [ngClass]="{ 'is-invalid': submitted && f.codedivision.errors, 'is-valid': submitted && f.codedivision.valid}"  >
+           <div *ngIf="codeexiste" class="alert alert-danger my-2" >Ce code est déjà utilisé  </div>
+           <div *ngIf="submitted && f.codedivision.errors" class="alert alert-danger my-2" >
+            Veuillez saisir un code</div> 
+      </div>
+      
+
+      <div class="col my form-group">
+        <label for="intituledivision">Intitulé Division</label>
+        <input type="text" id="intituledivision" class="form-control" formControlName="intituledivision" placeholder="intitule division" 
+        [ngClass]="{ 'is-invalid': submitted && f.intituledivision.errors, 'is-valid': submitted && f.intituledivision.valid}"   >  
+        <div *ngIf="intituleexiste" class="alert alert-danger my-2" >Cet Intitulé est déjà utilisé  </div> 
+        <div *ngIf="submitted && f.intituledivision.errors" class="alert alert-danger my-2" >
+          Veuillez saisir un intitulé</div> 
+      </div>
+     
+    </div>
+      <div class=" my form-group">
+      
+        <button  class="pull-left"   type="submit" class="btn btn-success" >Ajouter la division</button>
+
+        <button class="pull-right" style="float: right;"  type="submit" class="btn btn-primary" (click)="Annuler()" >Annuler</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+</div>
+    
+<ng-template #callAPIDialog>
+  <h2 matDialogTitle>Remarque</h2>
+  <mat-dialog-content class="mat-typography">
+    <h3>Etes-vous sûr de vouloir supprimer la division ?</h3>
+  
+  </mat-dialog-content>
+  <mat-dialog-actions class="row" align="end">
+      <button mat-button matDialogClose="no" class=" col btn btn.btn-primary pull-left">Annuler</button>
+      <button mat-button matDialogClose="yes" class=" col btn btn-danger pull-right">Supprimer</button>
+  </mat-dialog-actions>
+</ng-template>
+
+
+  <button type="button"  class="my btn btn-success my-3" (click)="ajouterDivision()" *ngIf="!add">Ajouter Division</button>
+  <h2 class="card-title">Les division de l'entreprise </h2>
+<div class="mat-elevation-z8 table-responsive">
+  
+  <mat-form-field class="mat-form-field ml-2 mt-2" >
+    
+    <mat-label><mat-icon class="mr-1 ">search</mat-icon>Recherche</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Ex.division1" >
+  </mat-form-field>
+
+
+  <table mat-table matSort    [dataSource]="dataSource"  >
+
+    <ng-container matColumnDef="NumDivision">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Num Division </th>
+      <td mat-cell *matCellDef="let element index as i;"> {{i+1}} </td>
+    </ng-container>
+  
+   
+    <ng-container matColumnDef="codeDivision">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Code Division </th>
+      <td  mat-cell *matCellDef="let element index as i;">
+        <span *ngIf="enableEditIndex !==i"> {{element.codeDivision}} </span>
+        <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table"  type="text"  [(ngModel)]="codeDivision" required >
+      </td>
+  
+      
+    </ng-container>
+  
+   
+    <ng-container matColumnDef="intitulePosition">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Intitulé Division </th>
+      <td mat-cell *matCellDef="let element index as i;">
+        <span *ngIf="enableEditIndex !==i">  {{element.intitulePosition}} </span>
+        <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="intitulePosition" required >
+      </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="action1">
+      <th mat-header-cell *matHeaderCellDef class="mx-auto " >Action1</th>
+      <td mat-cell *matCellDef="let element index as i;" >
+   <button *ngIf="enableEdit && enableEditIndex == i" id="saveBtn" class="btn btn-primary btn-sm px-3 mr-3 " (click)="saveSegment(element)"
+    type="submit">
+          Enregistrer</button>
+  <button *ngIf="enableEdit && enableEditIndex == i" (click)="cancel(i) " class="btn btn-secondary btn-sm px-3 ">Annuler</button>
+
+        <button *ngIf="!enableEdit" mat-button class="btn btn-primary btn-sm px-1 "  (click)="enableEditMethod($event,i, element) ">
+          <mat-icon >launch</mat-icon>Modifier</button>
+        
+      </td>
+    </ng-container>
+
+    <ng-container   matColumnDef="action2">
+      <th mat-header-cell *matHeaderCellDef class="mx-auto " >Action2</th>
+      <td mat-cell *matCellDef="let element index as i;" >
+        <button *ngIf="!enableEdit" mat-button class="btn btn-danger btn-sm px-1 "    (click)="callAPI(element)">
+          <mat-icon>delete_outline</mat-icon>Supprimer</button>  
+      </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+  <!--
+  <div class="card  " >
+    <div class="card-body">
+      <h2 class="card-title">Les division de l'entreprise </h2>
+      <div class="card-text">
+  <div *ngIf="divisions.length > 0">
+   
+    <div class="table-responsive">
+      <table class="table table-centered table-hover mb-0" id="datatable">
+        <thead>
+        <tr>
+          <th class="border-top-0" scope="col">Num Division</th>
+          <th class="border-top-0" scope="col">Code Division</th>
+          <th class="border-top-0" scope="col">Intitule Division</th>
+          <th class="border-top-0" scope="col" style="width:120px">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let division of divisions" >
+          <th scope="row"> {{divisions.indexOf(division)+1}}</th>
+          <td> {{division.codeDivision}}</td>
+          <td>{{ division.intitulePosition }}</td>
+          <td style="white-space: nowrap">
+            <a class="btn btn-secondary btn-sm">Modifier</a>&nbsp;
+            <button  class="btn btn-danger btn-sm">Désactiver</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+ -->
+
+  <!-- 
+  <table class="table">
+    <thead>
+      <tr style="margin-top: 15px; margin-bottom: 15px;">
+        <th scope="col">Num Division</th>
+        <th scope="col">Code Division</th>
+        <th scope="col">Intitule Division</th>
+
+     
+        <th scope="col">Action1</th>
+        <th scope="col">Action2</th>
+     
+      </tr>
+    </thead>
+    <tbody>
+      <tr   style="margin-top: 15px; margin-bottom: 15px;" *ngFor="let division of divisions">
+        <th scope="row"> {{divisions.indexOf(division)+1}}</th>
+        <td> {{division.codeDivision}}</td>
+        <td>{{ division.intitulePosition }}</td>
+        
+        <td> <button type="button" (click)="onModifierDivision(division)" class="btn btn-primary"  >Modifier</button></td>
+        <td><button type="button" (click)="onSupprimerDivision(division)" class="btn btn-danger"  >Supprimer</button></td>
+        
+      </tr>
+    </tbody>
+  </table>
+</div>
+-->
