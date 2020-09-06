@@ -27,14 +27,35 @@
     <ng-container matColumnDef="evalColl">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Evaluation Collaborateur </th>
         <td mat-cell *matCellDef="let element index as i;">
-          <span *ngIf="enableEditIndex !==i">  {{element.evalColl}} </span>
-          <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="evalColl" required >
+          <span *ngIf="enableEditIndex !==i"> 
+            <span *ngIf="element.evalColl>=5 || element.evalColl <=0"> / </span> 
+            <span *ngIf="element.evalColl==1">  Non atteint  </span> 
+            <span *ngIf="element.evalColl==2">  Partiel   </span> 
+            <span *ngIf="element.evalColl==3">   atteint  </span> 
+            <span *ngIf="element.evalColl==4">  Dépassé   </span> 
+            </span>
+          <select  *ngIf="enableEdit && enableEditIndex ==i" class="form-control "   [ngModel]="selectedDevice" (ngModelChange)="onChange($event)"  >
+            <option  value=""  > </option>
+            <option value="1"> Non atteint </option>
+            <option value="2"> Partiel</option>
+            <option value="3"> Atteint  </option>
+            <option value="4"> Dépassé </option>
+          </select>
+          <div *ngIf="errsaisi && enableEdit && enableEditIndex ==i" class="alert alert-danger my-2" >
+            Ce champ est obligatoire</div> 
         </td>
+        
       </ng-container>
 
     <ng-container matColumnDef="evalResp">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Evaluation Responsable </th>
-      <td mat-cell *matCellDef="let element index as i;"> {{element.evalResp}}  </td>
+      <td mat-cell *matCellDef="let element index as i;"> 
+          <span *ngIf="element.evalResp>=5 || element.evalResp <=0"> / </span> 
+          <span *ngIf="element.evalResp==1">  Non atteint  </span> 
+          <span *ngIf="element.evalResp==2">  Partiel   </span> 
+          <span *ngIf="element.evalResp==3">   atteint  </span> 
+          <span *ngIf="element.evalResp==4">  Dépassé   </span> 
+          </td>
     </ng-container>
 
   

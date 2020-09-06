@@ -3,11 +3,12 @@ import { Injectable } from '@angular/core';
 import { map } from "rxjs/operators";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-
+import {environment} from "src/environments/environment";
  
 @Injectable()
 export class FormationService {
-  private baseUrl = 'http://localhost:8080/Formation';
+  private baseUrl = environment.apiUrl+'/Formation' ;
+//  private baseUrl = 'http://localhost:8080/Formation';
   constructor(private http: HttpClient) { }
 
   getAllFormations(c: number): Observable<Formation[]>{
@@ -24,7 +25,7 @@ export class FormationService {
 }
 
 deleteFormation(CodeFormation: string): Observable<Formation> {
-    return this.http.delete<Formation>(this.baseUrl + '/delete');
+    return this.http.delete<Formation>(this.baseUrl + '/delete/'+CodeFormation);
 }
 
 

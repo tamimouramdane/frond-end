@@ -3,9 +3,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../models/User.model';
 import { Employe } from '../models/Employe.model';
-
-const AUTH_API = 'http://localhost:8080/api/auth/';
-
+import {environment} from "src/environments/environment";
+const AUTH_API = environment.apiUrl+'/api/auth/' ;
+//'http://localhost:8080/api/auth/'
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };

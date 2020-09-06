@@ -3,11 +3,11 @@ import { Injectable } from '@angular/core';
 import { map } from "rxjs/operators";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-
+import {environment} from "src/environments/environment";
  
 @Injectable()
 export class PosteService {
-  private baseUrl = 'http://localhost:8080/Poste';
+  private baseUrl =environment.apiUrl+ '/Poste';
   constructor(private http: HttpClient) { }
 
   getAllPostes() {

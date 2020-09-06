@@ -1,0 +1,50 @@
+<h2 class="card-title mt-3">Evolution professionnelle souhaitée par le collaborateur</h2>
+<h2  class="my-0" *ngIf="coll"> <span class="text-uppercase"> {{   coll.nom  }} </span> {{coll.prenom}}</h2>
+<h3 class="font-weight-bold mt-2" *ngIf="coll && coll.poste" >{{coll.poste.intitulePoste}}</h3>
+<div *ngIf="!evoldep" class="alert alert-danger my-2" >
+   l'evolution est seulement dans l'etape 8 (debut de l'evolution...) </div> 
+
+  <div *ngIf="evoldep" >
+<div  class=" my form-group">
+    <label for="objexistant"> Type d'evolution choisi par le collaborateur </label>
+    <input type="text" id="type" class="form-control"  [(ngModel)]="type" readonly>
+  </div>
+
+  <div class="col my form-group">
+    <label for="poste"> Poste souhaitée éventuellement </label>
+    <input type="text" id="poste" class="form-control"  [(ngModel)]="poste" readonly>
+  </div>
+  <div   class="col my form-group">
+    <label for="mobilite"> Préférence en cas de mobilité géographique</label>
+    <input type="text" id="mobilite" class="form-control"  [(ngModel)]="mobilite"  readonly>
+  </div>
+  <div  class="col my form-group">
+    <label for="echeance"> Echéance souhaitée</label>
+    <input type="text" id="echeance" class="form-control"  [(ngModel)]="echeance"  readonly>
+  </div>
+
+  <div class="form-group">
+    <label for="exampleFormControlTextarea1">Commentaire du  collaborateur </label>
+    <textarea class="form-control" id="exampleFormControlTextarea1"  [(ngModel)]="commentairecol" readonly ></textarea>
+  </div>
+ 
+ 
+  <div class="form-group">
+    <label for="exampleFormControlTextarea1">Avis du Responsable </label>
+    <textarea class="form-control" id="exampleFormControlTextarea1"  [(ngModel)]="avisResp"  [readonly]="!evol || !eval" ></textarea>
+  </div>
+
+  <div *ngIf="evol &&!eval && evolu" class="form-group text-center" >
+    <button  class="btn btn-lg btn-primary "  (click)="Evoluer()"> 
+     Donner votre avis
+    </button>
+    
+</div>
+
+  <div *ngIf="eval" class=" my form-group">
+    <button class="pull-left"    type="submit" class="btn btn-success" (click)="Enregistrer()">Enregistrer l'evolution</button>
+
+    <button class="pull-right" style="float: right;"  type="submit" class="btn btn-primary" (click)="Annuler()">Annuler</button>
+   
+  </div>
+</div>

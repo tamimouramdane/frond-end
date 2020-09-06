@@ -116,12 +116,8 @@ callAPI(element) {
      this.employeService.getEmployeUser(Number(this.a)).subscribe(emp => {
     this.coll=emp;
     this.evaluationService.getAllPonderations( this.coll.codeEmploye).subscribe(ponds=>{
-  
-      
-      this.dataSource2  = new MatTableDataSource<Ponderation>(ponds);
+       this.dataSource2  = new MatTableDataSource<Ponderation>(ponds);
       this.ponderations=ponds;  
-      
-  
      },
      err =>{
       console.log(err.error.message);  
@@ -132,7 +128,6 @@ callAPI(element) {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
         this.evaluations=evas;   
-        
       });
   },
   err => { 

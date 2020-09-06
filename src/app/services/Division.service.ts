@@ -3,14 +3,14 @@ import { Injectable } from '@angular/core';
 import { map } from "rxjs/operators";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-
+import {environment} from "src/environments/environment";
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
 @Injectable(
 )
 export class DivisionService {
-  private baseUrl = 'http://localhost:8080/Division';
+  private baseUrl = environment.apiUrl+'/Division';
   constructor(private http: HttpClient) { }
 
   getAllDivisions() {

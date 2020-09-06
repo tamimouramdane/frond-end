@@ -7,13 +7,15 @@ import { EvolutionService } from '../services/evolution.service';
 import { Evolution } from '../models/Evolution.model';
 import { TokenStorageService } from '../services/token-storage.service';
 import { Employe } from '../models/Employe.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-evolutioncol',
-  templateUrl: './evolutioncol.component.html',
-  styleUrls: ['./evolutioncol.component.scss']
+  selector: 'app-evolution',
+  templateUrl: './evolution.component.html',
+  styleUrls: ['./evolution.component.scss']
 })
-export class EvolutioncolComponent implements OnInit {
+export class EvolutionComponent implements OnInit {
+
   selectedDev;
   submitted;
   echeance;
@@ -28,25 +30,35 @@ export class EvolutioncolComponent implements OnInit {
   evoldep: boolean;
   id: any;
   errorMessage: any;
-  employe:Employe; 
+  coll:Employe; 
   commentairecol; avisResp;
+  type;
   constructor( private employeService:EmployeService,private tokenStorageService:TokenStorageService,
     private evaluationService:EvaluationService, private evolutionService: EvolutionService
-    , private formBuilder: FormBuilder,private phaseService:PhaseService) { }
+    , private formBuilder: FormBuilder,private phaseService:PhaseService,
+    private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.id= this.tokenStorageService.getUser().id;
-  this.employeService.getEmployeUser(Number(this.id)).subscribe(emp => {  
-    this.employe=emp;
+    this.coll=this.employeService.getcollselec();
+    this.id =String( this.route.parent.snapshot.params['id'] ).substring(1,String( this.route.parent.snapshot.params['id'] ).length) ; 
+   
+   
+  this.employeService.getEmployeUser(Number(this.id)).subscribe(emp => { 
+    this.coll=emp;
      this.evolutionService.getEvolution(emp.codeEmploye).subscribe(evol=>{
-     this.evolu=evol;  console.log("evolution  "+this.evolu);
+     this.evolu=evol;
      if(evol && evol.type>=0 && evol.type <=4){
-       this.selectedDev=evol.type;
+       switch(evol.type){
+         case 0 : { this.type="aucune"; break;  }
+         case 1 : { this.type="Plus de responsabilité"; break;  }
+         case 2 : { this.type="Changement de fonction (métier)"; break;  }
+         case 3 : { this.type="Mobilité Nationale"; break;  }
+         case 4 : { this.type="Mobilité à l'international"; break;  }
+       }
        this.poste=evol.posteSouhaite;
        this.mobilite=evol.preferenceGeo;
        this.echeance=evol.echeance;
        this.commentairecol=evol.commentaireCol;
-       this.avisResp=evol.avisResp;
      }
      },
      err=>{
@@ -83,8 +95,8 @@ export class EvolutioncolComponent implements OnInit {
 
  onChangeDev(e){
    
-    this.selectedDev=e;
-  console.log(this.selectedDev);
+    this.selectedDevice=e;
+  console.log(this.selectedDevice);
  }
 
  
@@ -93,55 +105,24 @@ export class EvolutioncolComponent implements OnInit {
 }
 
 Enregistrer(){
-  switch( this.selectedDev) { 
-    case "1": { 
-       this.evolution=new Evolution(this.employe,this.date,1,null , null,this.echeance, this.commentairecol);
-       break; 
-    } 
-    case "2": { 
-      this.evolution=new Evolution(this.employe,this.date,2,this.poste, null,this.echeance, this.commentairecol);
-       break; 
-    } 
-    case "3": { 
-      this.evolution=new Evolution(this.employe,this.date,null , this.mobilite,this.echeance, this.commentairecol);
-      break; 
-   } 
-   case "4": { 
-    this.evolution=new Evolution(this.employe,this.date,null , this.mobilite,this.echeance, this.commentairecol);
-    break; 
- } 
-    default: { 
-      this.evolution=new Evolution(this.employe,this.date,0);
-       break; 
-    }
- } 
-
- if(!this.evolu){ console.log(this.evolution);
-  this.evolutionService.createEvolution(this.evolution).subscribe(res=>{
-  
+ 
+ if(this.evolu){
+   this.evolu.avisResp=this.avisResp; console.log("a "+this.evolu.avisResp);
+  this.evolutionService.updateEvolution(this.evolu).subscribe(res=>{
+    console.log("a "+this.evolu);
+  this.ngOnInit();
   },
   err=>{
     this.errorMessage = err.error.message;
     console.log(this.errorMessage);
   });
   }
-  else{ 
-    this.evolu.commentaireCol=this.commentairecol; this.evolu.echeance=this.echeance;
-    this.evolu.posteSouhaite=this.poste; this.evolu.preferenceGeo=this.mobilite;
-    this.evolu.type=this.selectedDev;   console.log(this.selectedDev);
-    this.evolutionService.updateEvolution(this.evolu).subscribe(res=>{
-      console.log(this.evolu);
-      this.ngOnInit();
-    },
-    err=>{
-      this.errorMessage = err.error.message;
-      console.log(this.errorMessage);
-    });
-  }
+  
   this.eval=false;
 }
 
 Evoluer(){
 this.eval=true;
 }
+
 }

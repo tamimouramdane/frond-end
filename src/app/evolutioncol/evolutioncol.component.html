@@ -1,35 +1,61 @@
 <h2 class="card-title mt-3">Evolution professionnelle souhaitée par le collaborateur</h2>
-<div class=" my form-group">
+<div *ngIf="!evoldep" class="alert alert-danger my-2" >
+  Vous pouvez saisir votre evolution seulement dans l'etape 8 (debut de l'evolution...) </div> 
+
+  <div *ngIf="evoldep" >
+<div *ngIf=" evol && eval" class=" my form-group">
     <label for="objexistant">Veuillez choisir votre type d'evolution </label>
     <select class="form-control "  [ngModel]="selectedDev" (ngModelChange)="onChangeDev($event)"  >
-        <option value=""></option>
-        <option value="plus"> Plus de responsabilité</option>
-        <option value="metier">Changement de fonction (métier)</option>
-        <option value="nationale">Mobilité Nationale</option>
-        <option value="international">Mobilité à l'international</option>
+        <option value="0">Aucune</option>
+        <option value="1"> Plus de responsabilité</option>
+        <option value="2">Changement de fonction (métier)</option>
+        <option value="3">Mobilité Nationale</option>
+        <option value="4">Mobilité à l'international</option>
     </select>
   </div>
 
-  <div  class="col my form-group">
+  <div class="col my form-group">
     <label for="poste"> Poste souhaitée éventuellement </label>
-    <input type="text" id="poste" class="form-control"  formControlName="poste" 
+    <input type="text" id="poste" class="form-control" 
    
-    [(ngModel)]="poste" >
+    [(ngModel)]="poste"  [readonly]="!evol || !eval">
   </div>
-  <div  class="col my form-group">
+  <div   class="col my form-group">
     <label for="mobilite"> Préférence en cas de mobilité géographique</label>
-    <input type="text" id="mobilite" class="form-control"  formControlName="mobilite" 
-  
-    [(ngModel)]="mobilite" >
+    <input type="text" id="mobilite" class="form-control"  
+    [(ngModel)]="mobilite"  [readonly]="!evol || !eval">
   </div>
   <div  class="col my form-group">
     <label for="echeance"> Echéance souhaitée</label>
-    <input type="text" id="mobilite" class="form-control"  formControlName="echeance" 
+    <input type="text" id="echeance" class="form-control"  
    
-    [(ngModel)]="echeance" >
+    [(ngModel)]="echeance"  [readonly]="!evol || !eval">
   </div>
 
+  <div class="form-group">
+    <label for="exampleFormControlTextarea1">Commentaire du  collaborateur </label>
+    <textarea class="form-control" id="exampleFormControlTextarea1"  [(ngModel)]="commentairecol" [readonly]="!evol || !eval" ></textarea>
+  </div>
+ 
 
+  <div class="form-group">
+    <label for="exampleFormControlTextarea2">Avis du Responsable </label>
+    <textarea class="form-control" id="exampleFormControlTextarea2"  [(ngModel)]="avisResp"  readonly ></textarea>
+  </div>
+  <div *ngIf="evol &&!eval" class="form-group text-center" >
+    <button  class="btn btn-lg btn-primary "  (click)="Evoluer()"> 
+      Choisir une evolution
+    </button>
+    
+</div>
+
+  <div *ngIf="eval" class=" my form-group">
+    <button class="pull-left"    type="submit" class="btn btn-success" (click)="Enregistrer()">Enregistrer l'evolution</button>
+
+    <button class="pull-right" style="float: right;"  type="submit" class="btn btn-primary" (click)="Annuler()">Annuler</button>
+   
+  </div>
+</div>
 <!-- 
 <p>Veuillez choisir votre type d'evolution :</p>
   <div class="form-check">

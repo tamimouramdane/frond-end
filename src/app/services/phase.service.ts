@@ -3,11 +3,11 @@ import { Injectable } from '@angular/core';
 import { map } from "rxjs/operators";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-
+import {environment} from "src/environments/environment";
  
 @Injectable()
 export class PhaseService {
-  private baseUrl = 'http://localhost:8080/Phase';
+  private baseUrl =environment.apiUrl+ '/Phase';
   private obcol:boolean;
   constructor(private http: HttpClient) { }
 
@@ -18,10 +18,6 @@ export class PhaseService {
   setPhase( phase: Phase) {
     return this.http.put(this.baseUrl +'/update', phase);
 }
-
-  
-
-
 
 
 }

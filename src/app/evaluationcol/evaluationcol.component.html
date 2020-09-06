@@ -33,9 +33,9 @@
          
           <div class="col-md-8 my form-group">
               <label for="commentairecolmi"> Commentaire</label>
-              <input type="text" id="commentairecolmi" class="form-control"  formControlName="commentairecolmi" 
-              [ngClass]="{ 'is-invalid': submitted && f.commentairecolmi.errors, 'is-valid': submitted && f.commentairecolmi.valid}" 
-               [(ngModel)]="commentairecolmi"  [readonly]="!evalmi || !eval" >
+               <textarea id="commentairecolmi" class="form-control"  formControlName="commentairecolmi" 
+               [ngClass]="{ 'is-invalid': submitted && f.commentairecolmi.errors, 'is-valid': submitted && f.commentairecolmi.valid}" 
+                [(ngModel)]="commentairecolmi"  [readonly]="!evalmi || !eval"  ></textarea>
             </div>
           </div>
 
@@ -54,9 +54,9 @@
     
           <div class="col-md-8 my form-group">
               <label for="commentairecolfi"> Commentaire</label>
-              <input type="text" id="commentairecolfi" class="form-control" formControlName="commentairecolfi" 
-              [ngClass]="{ 'is-invalid': submitted && f.commentairecolfi.errors, 'is-valid': submitted && f.commentairecolfi.valid}" 
-               [(ngModel)]="commentairecolfi"  [readonly]="!evalf || !eval" >
+               <textarea  id="commentairecolfi" class="form-control" formControlName="commentairecolfi" 
+               [ngClass]="{ 'is-invalid': submitted && f.commentairecolfi.errors, 'is-valid': submitted && f.commentairecolfi.valid}" 
+                [(ngModel)]="commentairecolfi"  [readonly]="!evalf || !eval" ></textarea>
             </div>
           </div>
           <div *ngIf="(evalmi || evalf) &&!eval" class="form-group text-center" >
@@ -96,8 +96,8 @@
     
           <div class="col-md-8 my form-group">
               <label for="commentaireresmi"> Commentaire</label>
-              <input type="text" id="commentaireresmi" class="form-control"  readonly 
-              [(ngModel)]="commi"  >
+              <textarea  id="commentaireresmi" class="form-control"  readonly 
+              [(ngModel)]="commi"   ></textarea>
             </div>
           </div>
 
@@ -115,8 +115,8 @@
     
           <div class="col-md-8 my form-group">
               <label for="commentaireresfi"> Commentaire</label>
-              <input type="text" id="commentaireresfi" class="form-control" readonly
-              [(ngModel)]="comf" >
+              <textarea  id="commentaireresfi" class="form-control" readonly
+              [(ngModel)]="comf"  ></textarea>
             </div>
           </div>
          

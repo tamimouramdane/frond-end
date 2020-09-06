@@ -74,7 +74,8 @@ import { FormationcolComponent } from './formationcol/formationcol.component';
 import { EvolutioncolComponent } from './evolutioncol/evolutioncol.component';
 import { ValidationComponent } from './validation/validation.component';
 import { ValidationcolComponent } from './validationcol/validationcol.component';
-
+import { EvolutionComponent } from './evolution/evolution.component';
+import { EvolutionService } from './services/evolution.service';
 
 
 
@@ -118,6 +119,7 @@ const appRoutes: Routes = [
               {path: 'evaluation', component:EvaluationComponent},
               {path: 'validation', component:ValidationComponent},
               {path: 'formation', component:FormationComponent},
+              {path: 'evolution', component:EvolutionComponent},
               { path: '',   redirectTo: 'fixation', pathMatch: 'full' }
             ] },
     
@@ -171,6 +173,7 @@ const appRoutes: Routes = [
     EvaluationcolComponent,
     FormationComponent,
     FormationcolComponent,
+    EvolutionComponent,
     EvolutioncolComponent,
     ValidationComponent,
     ValidationcolComponent
@@ -220,6 +223,7 @@ const appRoutes: Routes = [
     EvaluationService,
     FormationService,
     PhaseService ,
+    EvolutionService,
     authInterceptorProviders
    
   ],

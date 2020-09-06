@@ -445,22 +445,7 @@ get f() { return this.objectifForm.controls; }
 
   Enregistrer(){
  
-    /*
-    if(!this.pond1 || !this.pond2 || !this.pond3 || !this.action1 || !this.action2 || !this.action3 ||
-       this.pond1=='' || this.pond2 =='' || this.pond3=='' ||this.action1=='' || this.action2 =='' || this.action3=='' ){
-      this.remptout=false;
-      return;
-    }
-    if(isNaN(Number(this.pond1)) || Number(this.pond1)>100 || Number(this.pond1) < 1 || isNaN(Number(this.pond2))  || Number(this.pond2)>100 
-    || Number(this.pond2) < 1 || isNaN(Number(this.pond3))|| Number(this.pond3)>100 || Number(this.pond3) < 1){
-      this.ponderr=true;
-      return;
-    }
-    if(Number(this.pond1)+ Number(this.pond2)+Number(this.pond3) > 100){
-      this.sompond=false;
-      return;
-    }
-    */
+  
     console.log(new Ponderation(this.emp,this.evalempcol[0],this.pond1, this.action1));
    this.evaluationService.createPonderation(new Ponderation(this.emp,this.evalempcol[0],this.pond1, this.action1)).subscribe(
      res =>{

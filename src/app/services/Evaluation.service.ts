@@ -11,10 +11,11 @@ import {Service} from '../models/Service.model';
 import {Direction} from '../models/Direction.model';
 import {Division} from '../models/Division.model';
 import { Ponderation } from '../models/Ponderation.model';
- 
+import {environment} from "src/environments/environment";
+
 @Injectable()
 export class EvaluationService {
-  private baseUrl = 'http://localhost:8080/Evaluation';
+  private baseUrl =environment.apiUrl+ '/Evaluation';
   constructor(private http: HttpClient) { }
 
   getEvalsCollect(codeposition:number):Observable<Evaluation[]>{

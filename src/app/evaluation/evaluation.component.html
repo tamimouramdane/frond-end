@@ -33,7 +33,7 @@
     
           <div class="col-md-8 my form-group">
               <label for="commentairecolmi"> Commentaire</label>
-              <input type="text" id="commentairecolmi" class="form-control" readonly [(ngModel)]="commentairecolmi">
+              <textarea class="form-control" id="commentairecolmi" readonly [(ngModel)]="commentairecolmi" ></textarea>
             </div>
           </div>
 
@@ -50,7 +50,7 @@
     
           <div class="col-md-8 my form-group">
               <label for="commentairecolfi"> Commentaire</label>
-              <input type="text" id="commentairecolfi" class="form-control" readonly [(ngModel)]="commentairecolfi" >
+              <textarea class="form-control" id="commentairecolfi" readonly [(ngModel)]="commentairecolfi" ></textarea>
             </div>
           </div>
 </div>
@@ -78,10 +78,11 @@
     
           <div class="col-md-8 my form-group">
               <label for="commentaireresmi"> Commentaire</label>
-              <input type="text" id="commentaireresmi" class="form-control"  formControlName="commentaireresmi" 
-              [ngClass]="{ 'is-invalid': submitted && f.commentaireresmi.errors, 'is-valid': submitted && f.commentaireresmi.valid}" 
-              [(ngModel)]="commi"  [readonly]="!evalmi || !eval" >
+              <textarea class="form-control" id="commentaireresmi" formControlName="commentaireresmi" 
+              [ngClass]="{ 'is-invalid': submitted && f.commentaireresmi.errors, 'is-valid': submitted && f.commentaireresmi.valid}"
+                 [(ngModel)]="commi"  [readonly]="!evalmi || !eval"  ></textarea>
             </div>
+   
           </div>
 
           <div class="row">
@@ -100,9 +101,10 @@
     
           <div class="col-md-8 my form-group">
               <label for="commentaireresfi"> Commentaire</label>
-              <input type="text" id="commentaireresfi" class="form-control" formControlName="commentaireresfi" 
-              [ngClass]="{ 'is-invalid': submitted && f.commentaireresfi.errors, 'is-valid': submitted && f.commentaireresfi.valid}"
-              [(ngModel)]="comf"  [readonly]="!evalf || !eval" >
+           
+              <textarea class="form-control" id="commentaireresfi" formControlName="commentaireresfi" 
+              [ngClass]="{ 'is-invalid': submitted && f.commentaireresfi.errors, 'is-valid': submitted && f.commentaireresmi.valid}"
+                 [(ngModel)]="comf"  [readonly]="!evalf || !eval"  ></textarea>
             </div>
           </div>
 

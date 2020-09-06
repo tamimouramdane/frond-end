@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { Evaluation } from '../models/Evaluation.model';
 import { User } from '../models/User.model';
-
+import {environment} from "src/environments/environment";
  
 @Injectable()
 export class EmployeService {
@@ -23,7 +23,7 @@ getMessage(): Observable<Employe> {
   private emplconnecte:Employe;
   private collselec :Employe;
   private subject = new Subject<Employe>();
-  private baseUrl = 'http://localhost:8080/emp';
+  private baseUrl =environment.apiUrl+ '/emp';
   constructor(private http: HttpClient) { }
 
   getEmployeco(){ return this.emplconnecte}

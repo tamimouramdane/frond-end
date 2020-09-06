@@ -109,7 +109,7 @@ evaluations:Array<EvaluationIndividuelle>=new Array<EvaluationIndividuelle>();
    this.objselect.evalFinCollab=formValue['evalcollfi'];
    this.objselect.commentaireCollabFin=formValue['commentairecolfi'];
    this.evaluationService.updateEvaluationInd(this.objselect).subscribe(eva => {
-  /*  this.ngOnInit(); */
+   this.ngOnInit(); 
  },
  err => {
    this.errorMessage = err.error.message;

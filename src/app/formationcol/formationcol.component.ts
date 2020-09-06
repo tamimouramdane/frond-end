@@ -27,6 +27,9 @@ export class FormationcolComponent implements OnInit {
 
   formations:Array<Formation>=new Array<Formation>();date: any;
   id: any;
+  objind: boolean;
+  objinddep: boolean;
+  errsaisi: boolean;
 ;
   objectifs:Array<EvaluationIndividuelle>=new Array<EvaluationIndividuelle>();
   add:boolean;
@@ -35,7 +38,7 @@ export class FormationcolComponent implements OnInit {
   errorMessage = '';
   loading = false;
   submitted = false;
-  displayedColumns: string[] = ['NumFormation', 'nomFormation','objectifPrevu','action1','action2'];
+  displayedColumns: string[] = ['NumFormation', 'nomFormation','objectifPrevu','action1'];
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   dataSource ;
@@ -87,28 +90,36 @@ export class FormationcolComponent implements OnInit {
       this.formations=formations;
       });
     });
-  this.phaseService.getPhase().subscribe(phase => {
-    if(phase.date>0){
-      this.date=phase.date;
-    }
-    if(phase.etape >=3 && phase.etape <=10){
-     
-      if(phase.etape>=3 && phase.etape <=6){
-        this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu'];
+    this.phaseService.getPhase().subscribe(phase => {
+      if(phase.date>0){
+        this.date=phase.date;
       }
-      if(phase.etape == 7){
-        this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu','evalColl','evalResp','action1'];
+      if(phase.etape >=3 && phase.etape <=10){
+        if(phase.etape == 3){
+          this.objind=true;
+          this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu'];
+        }else{
+          this.objind=false;
+        }
+        if(phase.etape>=4 && phase.etape <=6){
+          this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu'];
+        }
+        if(phase.etape == 7){
+          this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu','evalColl','evalResp','action1'];
+        }
+        if(phase.etape >=8){
+          this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu','evalColl','evalResp'];
+        }
+        this.objinddep=true;
       }
-      if(phase.etape >=8){
-        this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu','evalColl','evalResp'];
+      else{
+        this.objinddep=false;
       }
-    }
- 
-
-   },
-   err =>{
-      console.log(err.error.message);
-   });
+     },
+     err =>{
+        console.log(err.error.message);
+     });
+    
    
   }
   
@@ -126,8 +137,8 @@ export class FormationcolComponent implements OnInit {
   }
 
   enableEditMethod(e, i,element) {
-  this.displayedColumns.pop();
-  
+ 
+    if(element.evalColl >=1 && element.evalColl <=4){ this.selectedDevice=element.evalColl;  }
   
    this.evalColl=element.evalColl;
 
@@ -137,7 +148,11 @@ export class FormationcolComponent implements OnInit {
   }
 
   saveSegment(element){
-      element.evalColl= this.evalColl;
+    if(!this.selectedDevice || this.selectedDevice=="" ){
+      this.errsaisi=true;
+      }else{
+        this.errsaisi=false;
+      element.evalColl= this.selectedDevice ;
     this.formationService.updateFormation(element).subscribe(formation => {
       this.ngOnInit(); 
    },
@@ -146,13 +161,13 @@ export class FormationcolComponent implements OnInit {
    
    });
   
-   this.displayedColumns.push('action2');
+ 
     this.enableEdit = false;
     this.enableEditIndex = null;
-  
+      }
   }
   cancel(i){
-    this.displayedColumns.push('action2');
+  
     this.enableEdit = false;
     this.enableEditIndex = null;
   }

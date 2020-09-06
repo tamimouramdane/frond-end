@@ -26,6 +26,7 @@ import { Employe } from '../models/Employe.model';
 export class FormationComponent implements OnInit {
   formations:Array<Formation>=new Array<Formation>();objinddep: boolean;
   a: string;
+  errsaisi: boolean;
 ;
   objectifs:Array<EvaluationIndividuelle>=new Array<EvaluationIndividuelle>();
   add:boolean;
@@ -33,6 +34,7 @@ export class FormationComponent implements OnInit {
   newformation:Formation;
   coll:Employe;
   date;
+  objdep;
   errorMessage = '';
   loading = false;
   submitted = false;
@@ -82,15 +84,16 @@ export class FormationComponent implements OnInit {
   ngOnInit() {
     this.add=false;
     this.a =String( this.route.parent.snapshot.params['id'] ).substring(1,String( this.route.parent.snapshot.params['id'] ).length) ; 
-
+  
     this.employeService.getEmployeUser(Number(this.a)).subscribe(emp => {
-      this.coll=emp;
+      this.coll=emp; console.log(emp);
     this.formationService.getAllFormations(emp.codeEmploye).subscribe(formations => {
       console.log("marche  "+formations.length);
       this.dataSource  = new MatTableDataSource<Formation>(formations);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.formations=formations;
+      
   },
 
 err => { 
@@ -130,14 +133,10 @@ err => {
     else{
       this.objinddep=false;
     }
-
-  
-
    },
    err =>{
       console.log(err.error.message);
    });
- 
   }
   
   onChange(e){
@@ -252,20 +251,20 @@ onModifierFormation(formation:Formation){
   }
 
   enableEditMethod(e, i,element) {
-  this.displayedColumns.pop();
-   this.evalResp=element.evalResp;
-
+  this.errsaisi=false;
+ if(element.evalResp >=1 && element.evalResp <=4){ this.selectedDevice=element.evalResp;  }
+   
     this.enableEdit = true;
     this.enableEditIndex = i;
     console.log(i, e);
   }
 
-  saveSegment(element){
- if(this.selectedDevice=="" ){
-    
+  saveSegment(element){ 
+ if(!this.selectedDevice || this.selectedDevice=="" ){
+    this.errsaisi=true;
     }else{
-      
-      element.evalResp= this.selectedDevice;
+      this.errsaisi=false;
+      element.evalResp= this.selectedDevice; console.log("a "+this.selectedDevice);
     this.formationService.updateFormation(element).subscribe(formation => {
       this.ngOnInit(); 
    },
@@ -274,13 +273,13 @@ onModifierFormation(formation:Formation){
    
    });
   
-   this.displayedColumns.push('action2');
+ 
     this.enableEdit = false;
     this.enableEditIndex = null;
   }
   }
   cancel(i){
-    this.displayedColumns.push('action2');
+    
     this.enableEdit = false;
     this.enableEditIndex = null;
   }
