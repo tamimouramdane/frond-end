@@ -213,7 +213,7 @@
       
           <ng-container matColumnDef="ponderation">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Pondération </th>
-              <td mat-cell *matCellDef="let element index as i;"> {{element.ponderation}} 
+              <td mat-cell *matCellDef="let element index as i;"> {{element.ponderation}} <span *ngIf="element.ponderation">%</span>
             </td>
       
           </ng-container>
@@ -235,7 +235,21 @@
             <td mat-cell *matCellDef="let element index as i;">{{element.evaluation.cible}}
             </td>
           </ng-container>
-      
+
+          <ng-container matColumnDef="evalMiParcours">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Evaluation mi-parcours </th>
+              <td mat-cell *matCellDef="let element index as i;"> 
+                {{element.evaluation.evalMiParcours}}   <span *ngIf="element.evaluation.evalMiParcours">%</span>
+            </td>
+          </ng-container>
+    
+          <ng-container matColumnDef="evalFinale">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Evaluation finale </th>
+              <td mat-cell *matCellDef="let element index as i;">  {{element.evaluation.evalFinale}}   
+                <span *ngIf="element.evaluation.evalFinale">%</span>
+            </td>
+          </ng-container>
+
           <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
         </table>
@@ -328,7 +342,7 @@
     <ng-container matColumnDef="ponderation">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Pondération </th>
       <td mat-cell *matCellDef="let element index as i;">
-        <span *ngIf="enableEditIndex !==i">  {{element.ponderation}} </span>
+        <span *ngIf="enableEditIndex !==i && element.ponderation">  {{element.ponderation}} <span>%</span> </span>
         <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="ponderation" required >
       </td>
     </ng-container>

@@ -96,6 +96,11 @@ export class ObjectifListComponent implements OnInit {
   ponderr: boolean;
   sompond: boolean;
   choix: number;
+  enableEditEval: boolean;
+  enableEditEvalIndex: any;
+  phase: number;
+  evalMiParcours: any;
+  evalFinale: any;
   constructor(private formBuilder: FormBuilder,private divisionService: DivisionService, 
     private router:Router,private filialeService: FilialeService,
     private objectifService : ObjectifService, private evaluationService:EvaluationService
@@ -180,7 +185,7 @@ export class ObjectifListComponent implements OnInit {
     this.employes=employes;
   });
  
-  this.phaseService.getPhase().subscribe(phase => {
+  this.phaseService.getPhase().subscribe(phase => {  this.phase=phase.etape;
     if(phase.date>0){
       this.date=phase.date;
     }
@@ -190,6 +195,23 @@ export class ObjectifListComponent implements OnInit {
         this.displayedColumns1.pop();
         this.objcoll=true; 
         this.objcolfix=false;
+        
+        if(phase.etape >=5){
+        if(phase.etape== 5){
+          this.displayedColumns1  = ['typeobjectif','intituledivfil','objectif','kpi','cible','evalMiParcours','action3'];
+         }
+        if(phase.etape == 6){
+          this.displayedColumns1  = ['typeobjectif','intituledivfil','objectif','kpi','cible','evalMiParcours']; 
+        }    
+          }
+
+          if(phase.etape >=7){
+         if(phase.etape==7){
+          this.displayedColumns1  = ['typeobjectif','intituledivfil','objectif','kpi','cible','evalFinale','action3'];
+         } else{
+          this.displayedColumns1  = ['typeobjectif','intituledivfil','objectif','kpi','cible','evalFinale'];
+         }    
+        }
       }
       else{
         if(phase.etape==2){
@@ -454,7 +476,8 @@ get f() { return this.objectifForm.controls; }
      err=>{
       this.errorMessage = err.error.message;
      });
-     if(this.evalempcol && this.evalempcol[1]){
+
+     if(this.evalempcol && this.evalempcol[1]){ console.log(new Ponderation(this.emp,this.evalempcol[1],this.pond2, this.action2));
      this.evaluationService.createPonderation(new Ponderation(this.emp,this.evalempcol[1],this.pond2, this.action2)).subscribe(
       res =>{
         
@@ -463,7 +486,7 @@ get f() { return this.objectifForm.controls; }
        this.errorMessage = err.error.message;
       });
     }
-    if(this.evalempcol && this.evalempcol[2]){
+    if(this.evalempcol && this.evalempcol[2]){ console.log(new Ponderation(this.emp,this.evalempcol[2],this.pond3, this.action3));
       this.evaluationService.createPonderation(new Ponderation(this.emp,this.evalempcol[2],this.pond3, this.action3)).subscribe(
        res =>{
          
@@ -489,4 +512,50 @@ get f() { return this.objectifForm.controls; }
   this.fix=true;
   
   }
+
+
+
+  
+  enableEditEvalMethod(e, i,element) {
+ if(this.phase==5){
+    this.evalMiParcours=element.evalMiParcours;
+ }
+ if(this.phase==7){
+this.evalFinale =   element.evalFinale;
+ }
+
+    this.enableEditEval = true;
+    this.enableEditEvalIndex = i;
+    console.log(i, e);
+  }
+
+  saveSegmentEval(element){
+   
+    if(this.phase==5){
+      element.evalMiParcours=this.evalMiParcours;
+   }
+   if(this.phase==7){
+    element.evalFinale=this.evalFinale;
+   }
+   console.log(element);
+  
+      this.evaluationService.updateEvaluation(element).subscribe(eva => {
+        console.log(element);
+        this.ngOnInit(); 
+     },
+     err => {
+       this.errorMessage = err.error.message;
+     });
+    
+      this.enableEditEval = false;
+      this.enableEditEvalIndex = null;
+      
+    
+
+  }
+  cancelEval(i){
+    this.enableEditEval = false;
+    this.enableEditEvalIndex = null;
+  }
+ 
 }

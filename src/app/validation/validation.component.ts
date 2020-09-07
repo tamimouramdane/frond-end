@@ -41,7 +41,7 @@ export class ValidationComponent implements OnInit {
   responsable: Employe;
   selectedDevice: any;
   visa;  eval:boolean;
-  datevalid:boolean; commencol;
+  datevalid; commencol;
   constructor(private route: ActivatedRoute, private formBuilder: FormBuilder ,
     private employeService:EmployeService, private evaluationService:EvaluationService,
     private tokenStorageService:TokenStorageService,
@@ -50,6 +50,7 @@ export class ValidationComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.datevalid=new Date().getDate();  new Date()
     this.id= this.tokenStorageService.getUser().id;
     this.employeService.getEmployeUser(Number(this.id)).subscribe(emp => {
     this.resp=emp.nom.toUpperCase() +' '+emp.prenom;
@@ -90,7 +91,7 @@ export class ValidationComponent implements OnInit {
    
     this.valmidep=true;
     if(phase.etape<= 7){
-      this.displayedColumns2  = ['typeobjectif','intituledivfil','objectif','ponderation','evalMiParcours'];
+      this.displayedColumns2  = ['typeobjectif','intituledivfil','objectif','ponderation'];
       this.displayedColumns = ['Numobjectif', 'intituleObjectif', 'ponderation','evalMiParCollab','evalMiParcours'];
     
     }else{

@@ -56,13 +56,15 @@
   
       <ng-container matColumnDef="evalMiParcours">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Evaluation mi-parcours </th>
-          <td mat-cell *matCellDef="let element index as i;">  {{element.evalMiParcours}}   <span>%</span>
+          <td mat-cell *matCellDef="let element index as i;"> 
+            {{element.evaluation.evalMiParcours}}   <span *ngIf="element.evaluation.evalMiParcours">%</span>
         </td>
       </ng-container> 
 
       <ng-container matColumnDef="evalFinale">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Evaluation finale </th>
-          <td mat-cell *matCellDef="let element index as i;">  {{element.evalFinale}}   <span>%</span>
+          <td mat-cell *matCellDef="let element index as i;">  {{element.evaluation.evalFinale}}   
+            <span *ngIf="element.evaluation.evalFinale">%</span>
         </td>
   
       </ng-container> 
@@ -125,7 +127,7 @@
   </table>
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
-
+<!--
 <div  class="card mb-5 mt-2" >
     <h2 class="card-header text-center"> Validation Collaborateur </h2>
     <div class="card-body mt-0">
@@ -136,8 +138,8 @@
             <label >Visa</label>
       
               <input *ngIf="!valmi || !eval" type="text" class="form-control" [(ngModel)]="visa" [readonly]="!valmi || !eval" >
-              <select *ngIf="valmi && eval" class="form-control " [ngModel]="selectedDevice" (ngModelChange)="onChange($event)"  >
-                <option value="1"> Satisfait </option>
+              <select *ngIf="valmi && eval" class="form-control " [ngModel]="1"  (ngModelChange)="onChange($event)"  >
+                <option value="1" > Satisfait </option>
                 <option value="2"> Non satisfait</option>       
               </select>
           </div>
@@ -155,24 +157,12 @@
                    [(ngModel)]="commencol"  [readonly]="!valmi || !eval"  ></textarea>
               </div>
        </div>
-       
-       <div *ngIf="(valmi || valfi) && !eval" class="form-group text-center" >
-        <button  class="btn btn-lg btn-primary "  (click)="Valider()"> 
-           Valider
-        </button>
         
-    </div>
-    
-      <div *ngIf="eval" class=" my form-group">
-        <button class="pull-left"    type="submit" class="btn btn-success" >Enregistrer la validation</button>
-
-        <button class="pull-right" style="float: right;"  type="submit" class="btn btn-primary" (click)="Annuler()">Annuler</button>
-       
-      </div>
+     
 </div>
 </div>
 </div>
-
+-->
 <div  class="card mb-5 mt-2" >
   <h2 class="card-header text-center"> Validation Responsable </h2>
   <div class="card-body mt-0">
@@ -182,22 +172,35 @@
        <div class="col-md-3 my form-group">
           <label >Visa</label>
     
-            <input *ngIf="!valmi || !eval" type="text" class="form-control" [(ngModel)]="visa" readonly >
+            <input *ngIf="!valmi || !eval" type="text" class="form-control" [(ngModel)]="visa"  >
         </div>
   
    
           <div class="col-md-3 my form-group">
           <label>Date </label>
             <input type="date"  class="form-control"  
-              [(ngModel)]="datevalid"  readonly >
+              [(ngModel)]="datevalid"   >
           </div>
 
           <div class="col-md-6 my form-group">
               <label > Commentaire</label>
               <textarea class="form-control" 
-                 [(ngModel)]="commencol" readonly></textarea>
+                 [(ngModel)]="commencol" ></textarea>
             </div>
      </div>
+     <div *ngIf="(valmi || valfi) && !eval" class="form-group text-center" >
+      <button  class="btn btn-lg btn-primary "  (click)="Valider()"> 
+         Valider
+      </button>
+      
+  </div>
+  
+    <div *ngIf="eval" class=" my form-group">
+      <button class="pull-left"    type="submit" class="btn btn-success" >Enregistrer la validation</button>
+
+      <button class="pull-right" style="float: right;"  type="submit" class="btn btn-primary" (click)="Annuler()">Annuler</button>
+     
+    </div>
      
      
 </div>

@@ -156,6 +156,12 @@ callAPI(element) {
      if(phase.etape >=4 && phase.etape <=10) {
        this.displayedColumns.pop();
        this.displayedColumns.pop();
+       if(phase.etape == 6){
+        this.displayedColumns2 = ['typeobjectif','intituledivfil','objectif', 'ponderation','plandaction','kpi','cible','evalMiParcours'];
+       }
+       if(phase.etape >=8){
+        this.displayedColumns2 = ['typeobjectif','intituledivfil','objectif', 'ponderation','plandaction','kpi','cible','evalFinale'];
+       }
      }    
    },
    err =>{
