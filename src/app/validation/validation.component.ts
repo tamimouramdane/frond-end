@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { EmployeService } from '../services/Employe.service';
@@ -14,6 +14,10 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { EvaluationIndividuelle } from '../models/EvaluationIndividuelle.model';
 import { Evaluation } from '../models/Evaluation.model';
+import { ValidationService } from '../services/Validation.service';
+import { Validation } from '../models/Validation.model';
+import * as jspdf from 'jspdf';  
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-validation',
@@ -21,6 +25,7 @@ import { Evaluation } from '../models/Evaluation.model';
   styleUrls: ['./validation.component.scss']
 })
 export class ValidationComponent implements OnInit {
+  @ViewChild('content') content: ElementRef;
   a: string;
   ponderations:Array<Ponderation>=new Array<Ponderation>();
   evaluations:Array<Evaluation>=new Array<Evaluation>();
@@ -38,22 +43,30 @@ export class ValidationComponent implements OnInit {
   valfi:boolean;
   id: any;
   coll; resp;
+  validation:Validation;
   responsable: Employe;
   selectedDevice: any;
   visa;  eval:boolean;
   datevalid; commencol;
+  selectedDev;
+  amel; fort;
+  etape: any;
+  commenresp;
+  valExistante: Validation;
+  datevalidcol;
   constructor(private route: ActivatedRoute, private formBuilder: FormBuilder ,
     private employeService:EmployeService, private evaluationService:EvaluationService,
     private tokenStorageService:TokenStorageService,
     private router:Router,private objectifService:ObjectifService ,private dialog: MatDialog
-    ,private phaseService:PhaseService) { 
-  }
+    ,private phaseService:PhaseService, private validationService : ValidationService) {
+      
+    }
 
   ngOnInit(): void {
     this.datevalid=new Date().getDate();  new Date()
     this.id= this.tokenStorageService.getUser().id;
     this.employeService.getEmployeUser(Number(this.id)).subscribe(emp => {
-    this.resp=emp.nom.toUpperCase() +' '+emp.prenom;
+    this.resp=emp.nom.toUpperCase() +' '+emp.prenom;  console.log('aqaa');
     },
     err =>{
       console.log(err.error.message);  
@@ -76,6 +89,14 @@ export class ValidationComponent implements OnInit {
      this.dataSource.sort = this.sort;
        this.evaluations=evas;   
      });
+
+     this.validationService.getValidation(emp.codeEmploye).subscribe(val=>{
+     this.valExistante=val;
+     if(val){ }
+     },
+     err=>{
+      console.log(err.error.message);  
+     });
  },
  err => { 
    this.errorMessage = err.error.message;
@@ -83,7 +104,7 @@ export class ValidationComponent implements OnInit {
   console.log( this.errorMessage);
  }) ;
  
- this.phaseService.getPhase().subscribe(phase => {
+ this.phaseService.getPhase().subscribe(phase => { this.etape=phase.etape;
   if(phase.date>0){
     this.date=phase.date;
   }
@@ -129,6 +150,52 @@ export class ValidationComponent implements OnInit {
 
   Valider(){
     this.eval=true; console.log(this.eval);
+  /*
+    if(this.etape == 6){
+      this.validation= new Validation(this.coll, this.datevalid,0 ,true ,null ,null,null,
+        null, this.date, this.fort, this.amel );
+    }
+
+    if(this.etape == 8){
+      this.validation= new Validation(this.coll, this.datevalid,0 ,true ,null ,null,null,
+        null, this.date, this.fort, this.amel );
+    }
+  */
   }
   
+  onChangeDev(e){
+
+  }
+
+  downloadPDF(){
+
+    var data = document.getElementById('content');
+    html2canvas(data).then(canvas => {
+      var imgWidth = 208;
+      var imgHeight = canvas.height * imgWidth / canvas.width;
+      const contentDataURL = canvas.toDataURL('image/png')
+      let pdf = new jspdf.jsPDF();
+      var position = 0;
+      pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)
+      pdf.save('Validation.pdf');
+    });
+
+    /*
+  let doc = new jsPDF; 
+
+  let specialElementHandlers ={
+    '#editor': function( element,renderer){
+    return true;
+  }
+
+  };
+  let cont = this.content.nativeElement;
+  doc.fromHTML(cont.innerHTML, 15 , 15 , {
+    'width' : 190,
+    'elementHandlers' : specialElementHandlers
+  });
+  doc.save('Validation.pdf');
+*/
+}
+
 }

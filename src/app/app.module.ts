@@ -76,7 +76,7 @@ import { ValidationComponent } from './validation/validation.component';
 import { ValidationcolComponent } from './validationcol/validationcol.component';
 import { EvolutionComponent } from './evolution/evolution.component';
 import { EvolutionService } from './services/evolution.service';
-
+import {ValidationService} from'./services/Validation.service'
 
 
 const appRoutes: Routes = [
@@ -224,6 +224,7 @@ const appRoutes: Routes = [
     FormationService,
     PhaseService ,
     EvolutionService,
+    ValidationService,
     authInterceptorProviders
    
   ],

@@ -18,7 +18,7 @@ export class EvolutionComponent implements OnInit {
 
   selectedDev;
   submitted;
-  echeance;
+  echeance: Date= new Date(12,11 ,1950);
   mobilite;
   poste;
   evolution:Evolution;
@@ -33,6 +33,7 @@ export class EvolutionComponent implements OnInit {
   coll:Employe; 
   commentairecol; avisResp;
   type;
+  ty: number;
   constructor( private employeService:EmployeService,private tokenStorageService:TokenStorageService,
     private evaluationService:EvaluationService, private evolutionService: EvolutionService
     , private formBuilder: FormBuilder,private phaseService:PhaseService,
@@ -48,6 +49,7 @@ export class EvolutionComponent implements OnInit {
      this.evolutionService.getEvolution(emp.codeEmploye).subscribe(evol=>{
      this.evolu=evol;
      if(evol && evol.type>=0 && evol.type <=4){
+       this.ty=evol.type;
        switch(evol.type){
          case 0 : { this.type="aucune"; break;  }
          case 1 : { this.type="Plus de responsabilité"; break;  }
@@ -57,8 +59,9 @@ export class EvolutionComponent implements OnInit {
        }
        this.poste=evol.posteSouhaite;
        this.mobilite=evol.preferenceGeo;
-       this.echeance=evol.echeance;
+       this.echeance=evol.echeanceEvolution;
        this.commentairecol=evol.commentaireCol;
+       this.avisResp=evol.avisResp;     
      }
      },
      err=>{
@@ -75,9 +78,9 @@ export class EvolutionComponent implements OnInit {
       if(phase.date>0){
         this.date=phase.date;
       }
-      if(phase.etape >=9 && phase.etape <=10){
+      if(phase.etape >=7 && phase.etape <= 8 ){
         this.evoldep=true;
-      if(phase.etape== 9){
+      if(phase.etape== 7){
         this.evol=true;
        }
             else{

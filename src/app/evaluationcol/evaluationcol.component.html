@@ -3,126 +3,116 @@
     <div *ngIf="!evalmidep" class="alert alert-danger my-2" >
       Vous pouvez evaluer seulement dans l'etape 5 (debut de l'evaluation mi-parcours...)</div>
       
-    <div  *ngIf="evalmidep" class=" my form-group">
+  
+	 <div *ngIf="evalmidep" class=" my form-group" >
+    <table mat-table matSort [dataSource]="dataSource"  >
 
-        <label for="objexistant">Choisir Objectif  </label>
-        <select class="form-control "  [ngModel]="selectedDev" (ngModelChange)="onChangeDev($event)"  >
-            <option value=""></option>
-          <option  *ngFor="let evaluation of evaluations" (ngValue)="evaluation" >
-            {{  evaluation.objectif.nomObjectif  }} </option>
-        </select>
-      </div>
-
-<div *ngIf="add"  class="card mb-5 mt-2" >
-    <h2 class="card-header text-center"> Evaluation Collaborateur </h2>
-    <div class="card-body mt-0">
-      <div class="card-text">
-        <form [formGroup]="evalForm" ngNativeValidate (ngSubmit)="onSubmitForm()">
-        <div class="row">
-          <div class="col-md-4 my form-group">
-          <label for="evalcollmi">Evaluation mi-parcours</label>
-          <div class="input-group mb-3">
-            <input type="text" id="evalcollmi" class="form-control"  formControlName="evalcollmi" 
-            [ngClass]="{ 'is-invalid': submitted && f.evalcollmi.errors, 'is-valid': submitted && f.evalcollmi.valid}" 
-             [(ngModel)]="evalcollmi" [readonly]="!evalmi || !eval">
-            <div class="input-group-append">
-              <span class="input-group-text" id="basic-addon2">%</span>
-            </div>
-          </div>
-          </div>
-         
-          <div class="col-md-8 my form-group">
-              <label for="commentairecolmi"> Commentaire</label>
-               <textarea id="commentairecolmi" class="form-control"  formControlName="commentairecolmi" 
-               [ngClass]="{ 'is-invalid': submitted && f.commentairecolmi.errors, 'is-valid': submitted && f.commentairecolmi.valid}" 
-                [(ngModel)]="commentairecolmi"  [readonly]="!evalmi || !eval"  ></textarea>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-4 my form-group">
-            <label for="evalcollfi">Evaluation Finale</label>
-            <div class="input-group mb-3">
-              <input type="text" id="evalcollfi" class="form-control" formControlName="evalcollfi" 
-              [ngClass]="{ 'is-invalid': submitted && f.evalcollfi.errors, 'is-valid': submitted && f.evalcollfi.valid}" 
-               [(ngModel)]="evalcollfi"  [readonly]="!evalf || !eval" >
-              <div class="input-group-append">
-                <span class="input-group-text" id="basic-addon2">%</span>
-              </div>
-            </div>
-          </div>
+      <ng-container matColumnDef="Numobjectif">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Num Objectif </th>
+        <td mat-cell *matCellDef="let element index as i;"> {{i+1}} </td>
+      </ng-container>
     
-          <div class="col-md-8 my form-group">
-              <label for="commentairecolfi"> Commentaire</label>
-               <textarea  id="commentairecolfi" class="form-control" formControlName="commentairecolfi" 
-               [ngClass]="{ 'is-invalid': submitted && f.commentairecolfi.errors, 'is-valid': submitted && f.commentairecolfi.valid}" 
-                [(ngModel)]="commentairecolfi"  [readonly]="!evalf || !eval" ></textarea>
-            </div>
-          </div>
-          <div *ngIf="(evalmi || evalf) &&!eval" class="form-group text-center" >
-            <button  class="btn btn-lg btn-primary "  (click)="Evaluer()"> 
-                S'auto Evaluer
-            </button>
-            
-        </div>
-        
-          <div *ngIf="eval" class=" my form-group">
-            <button class="pull-left"    type="submit" class="btn btn-success" >Enregistrer l'evaluation</button>
+     
+      <ng-container matColumnDef="intituleObjectif">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Intitulé Objectif </th>
+        <td  mat-cell *matCellDef="let element index as i;"> {{element.objectif.nomObjectif}} 
+        </td>
+      </ng-container>
     
-            <button class="pull-right" style="float: right;"  type="submit" class="btn btn-primary" (click)="Annuler()">Annuler</button>
-           
-          </div>
-        </form>
-</div>
-</div>
-</div>
-
-<div *ngIf="add" class="card mb-5 mt-2" >
-    <h2 class="card-header text-center"> Evaluation Responsable </h2>
-    <div class="card-body mt-0">
-      <div class="card-text">
-       
-        <div class="row">
-            <div class="col-md-4 my form-group">
-            <label for="evalreslmi">Evaluation mi-parcours</label>
-            <div class="input-group mb-3">
-              <input type="text" id="evalreslmi" class="form-control" readonly
-               [(ngModel)]="evaresmi" >
-              <div class="input-group-append">
-                <span class="input-group-text" id="basic-addon2">%</span>
-              </div>
-            </div>
-          </div>
+     
+      <ng-container matColumnDef="ponderation">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Pondération </th>
+        <td mat-cell *matCellDef="let element index as i;">
+          <span *ngIf="element.ponderation">  {{element.ponderation}} <span>%</span> </span>
+        </td>
+      </ng-container>
     
-          <div class="col-md-8 my form-group">
-              <label for="commentaireresmi"> Commentaire</label>
-              <textarea  id="commentaireresmi" class="form-control"  readonly 
-              [(ngModel)]="commi"   ></textarea>
-            </div>
-          </div>
+<ng-container matColumnDef="evalMiParCollab">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header> Eval mi-parcours Collab </th>
+  <td mat-cell *matCellDef="let element index as i;">
+    <span *ngIf=" enableEditIndex !==i">  {{element.evalMiParCollab}} <span *ngIf="element.evalMiParCollab" >%</span> </span>
+    <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table"  type="text"  [(ngModel)]="evalMiParCollab" required >
+  </td>
+</ng-container>
 
-          <div class="row">
-            <div class="col-md-4 my form-group">
-            <label for="evalreslmi">Evaluation Finale</label>
-            <div class="input-group mb-3">
-              <input type="text" id="evalreslfi" class="form-control" readonly [(ngModel)]="evaresf"  >
-              <div class="input-group-append">
-                <span class="input-group-text" id="basic-addon2">%</span>
-              </div>
-            </div>
+<ng-container matColumnDef="commentaireCollabMiPar">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header> Commentaire Collab  </th>
+  <td mat-cell *matCellDef="let element index as i;">
+    <span *ngIf=" enableEditIndex !==i">    {{element.commentaireCollabMiPar}}  </span>
+    <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table"  type="text"  [(ngModel)]="commentaireCollabMiPar" required >
+  </td>
+</ng-container>
+
+<ng-container matColumnDef="evalMiParcours">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header> Eval mi-parcours Resp  </th>
+  <td mat-cell *matCellDef="let element index as i;"> {{element.evalMiParcours}} 
+    <span *ngIf="element.evalMiParcours"  >%</span> 
+  </td>
+</ng-container>
+
+<ng-container matColumnDef="commentaireRespMiPar">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header> Commentaire Resp  </th>
+  <td mat-cell *matCellDef="let element index as i;">  {{element.commentaireRespMiPar}}  
+  </td>
+</ng-container>
+
+
+      <ng-container matColumnDef="evalFinCollab">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Eval finale Collab </th>
+        <td mat-cell *matCellDef="let element index as i;">
+          <span *ngIf=" enableEditIndex !==i">    {{element.evalFinCollab}}  <span *ngIf="element.evalFinCollab" >%</span> </span>
+          <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table"  type="text"  [(ngModel)]="evalFinCollab" required >
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="commentaireCollabFin">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Commentaire Collab </th>
+        <td mat-cell *matCellDef="let element index as i;"> 
+          <span *ngIf=" enableEditIndex !==i">    {{element.commentaireCollabFin}}    </span>
+          <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table"  type="text"  [(ngModel)]="commentaireCollabFin" required >
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="evalFinale">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Eval finale Resp  </th>
+        <td mat-cell *matCellDef="let element index as i;">   {{element.evalFinale}}  
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="commentaireRespFin">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Commentaire Resp  </th>
+        <td mat-cell *matCellDef="let element index as i;">  {{element.commentaireRespFin}} 
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="action1">
+        <th mat-header-cell *matHeaderCellDef class="mx-auto " >Action1</th>
+        <td mat-cell *matCellDef="let element index as i;" >
+     <button *ngIf="enableEdit && enableEditIndex == i" id="saveBtn" class="btn btn-primary btn-sm px-3 mr-3 " (click)="saveSegment(element)"
+      type="submit">
+            Enregistrer</button>
+    <button *ngIf="enableEdit && enableEditIndex == i" (click)="cancel(i) " class="btn btn-secondary btn-sm px-3 ">Annuler</button>
+  
+          <button *ngIf="!enableEdit" mat-button class="btn btn-primary btn-sm px-1 "  (click)="enableEditMethod($event,i, element) ">
+            Evaluer</button>
           
-          </div>
+        </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
     
-          <div class="col-md-8 my form-group">
-              <label for="commentaireresfi"> Commentaire</label>
-              <textarea  id="commentaireresfi" class="form-control" readonly
-              [(ngModel)]="comf"  ></textarea>
-            </div>
-          </div>
-         
-      
-</div>
-</div>
-</div>
+    <div class="row">
+      <div  class="col-4 align-self-end my form-group">
+        <label for="echeance"> TRO</label>
+        <input type="text" id="echeance" class="form-control"  [(ngModel)]="tro"  readonly>
+      </div>
+  </div>
 
+
+ 
+    
+  </div>
 </div>

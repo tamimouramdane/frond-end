@@ -24,10 +24,12 @@ import { Employe } from '../models/Employe.model';
   styleUrls: ['./formation.component.scss']
 })
 export class FormationComponent implements OnInit {
-  formations:Array<Formation>=new Array<Formation>();objinddep: boolean;
+  formations:Array<Formation>=new Array<Formation>();
+  objinddep: boolean;
   a: string;
+  selectedDevicede;
   errsaisi: boolean;
-;
+  jusification;
   objectifs:Array<EvaluationIndividuelle>=new Array<EvaluationIndividuelle>();
   add:boolean;
   formationForm: FormGroup;
@@ -42,6 +44,9 @@ export class FormationComponent implements OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   dataSource ;
+  formationspass:Array<Formation>=new Array<Formation>();
+  displayedColumns1: string[]= ['NumFormation', 'nomFormation','objectifPrevu','evalColl','evalResp'];
+  dataSource1 ;
   enableEdit=false;
   enableEditIndex; 
   updateerror=false;
@@ -50,7 +55,8 @@ export class FormationComponent implements OnInit {
    nomFormation; evalResp;
    objectifPrevu;
    nomexiste; 
-   objind;
+   objind;  
+
   @ViewChild('callAPIDialog') callAPIDialog: TemplateRef<any>;
   constructor(private formationService: FormationService,private formBuilder: FormBuilder,private objectifService:ObjectifService
     ,private dialog: MatDialog,private phaseService:PhaseService ,private employeService:EmployeService,
@@ -84,7 +90,7 @@ export class FormationComponent implements OnInit {
   ngOnInit() {
     this.add=false;
     this.a =String( this.route.parent.snapshot.params['id'] ).substring(1,String( this.route.parent.snapshot.params['id'] ).length) ; 
-  
+   
     this.employeService.getEmployeUser(Number(this.a)).subscribe(emp => {
       this.coll=emp; console.log(emp);
     this.formationService.getAllFormations(emp.codeEmploye).subscribe(formations => {
@@ -93,15 +99,20 @@ export class FormationComponent implements OnInit {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.formations=formations;
-      
   },
-
 err => { 
   this.errorMessage = err.error.message;
  this.loading = false;
  console.log( this.errorMessage);
 }) ;
-
+    
+this.formationService.getFormationPas(emp.codeEmploye).subscribe(foms =>{
+  this.dataSource1  = new MatTableDataSource<Formation>(foms);
+  this.formationspass=foms;
+},
+err =>{
+  console.log( this.errorMessage);
+});
       },
       err => { 
         this.errorMessage = err.error.message;
@@ -112,21 +123,21 @@ err => {
     if(phase.date>0){
       this.date=phase.date;
     }
-    if(phase.etape >=3 && phase.etape <=10){
+    if(phase.etape >=3 && phase.etape <=8){
       if(phase.etape == 3){
         this.objind=true;
-        this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu','action2'];
+        this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu','demande','action2'];
       }else{
         this.objind=false;
       }
       if(phase.etape>=4 && phase.etape <=6){
-        this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu'];
+        this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu','demande'];
       }
       if(phase.etape == 7){
-        this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu','evalColl','evalResp','action1'];
+        this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu','demande','evalColl','evalResp','justification','action1'];
       }
       if(phase.etape >=8){
-        this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu','evalColl','evalResp'];
+        this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu','demande','evalColl','evalResp','justification'];
       }
       this.objinddep=true;
     }
@@ -137,60 +148,22 @@ err => {
    err =>{
       console.log(err.error.message);
    });
+
+ 
   }
   
   onChange(e){
     this.selectedDevice=e;
   }
- /*
-  initForm() {
-   this.formationForm = this.formBuilder.group({
-    
-     intituleformation: ['',Validators.required ],
-     evalResp:['']
-   });
- }
- get f() { return this.formationForm.controls; }
- onSubmitForm() {
-   this.submitted = true;
-   this.intituleexiste=false;
-
-    // stop here if form is invalid
-    if (this.formationForm.invalid) {
-        return;
-    }
-    const formValue = this.formationForm.value;
-  
-    if(formValue['evalResp'] != ''){
-    this.newformation=new Formation(formValue['intituleformation'] ,null,null,formValue['evalResp']);
-    }
-    else{
-      this.newformation=new Formation(formValue['intituleformation']);
-    }
-   this.loading = true;
-    this.formationService.createFormation(this.newformation).subscribe( formation => {
-       this.ngOnInit(); 
-       this.add=false;  
-      },
-      err => {
-         this.errorMessage = err.error.message;
-        this.loading = false;
-         if(this.errorMessage=="Fail -> Formation Name Already Exists!"){
-         this.intituleexiste=true;
-         }
-      });
-      this.submitted=false;    
- }
-
-  ajouterFormation(){
-    this.initForm();
-    this.add=!this.add;    
+  onChangede(e){
+    this.selectedDevicede=e;
   }
-*/
+
 initForm() {
   this.formationForm = this.formBuilder.group({
     nomFormation:['',Validators.required],
     objectifPrevu: ['',Validators.required ],
+    demande : 'true'
   });
 }
 get f() { return this.formationForm.controls; }
@@ -204,7 +177,7 @@ onSubmitForm() {
    }
  
   const formValue = this.formationForm.value;
-  this.newformation=new Formation(formValue['nomFormation'],formValue['objectifPrevu'], this.date,this.coll);
+  this.newformation=new Formation(formValue['nomFormation'],formValue['objectifPrevu'], this.date,this.coll,formValue['demande']);
   console.log(this.newformation);
   this.loading = true;
    this.formationService.createFormation(this.newformation).subscribe( form => {

@@ -7,6 +7,7 @@ import { EvolutionService } from '../services/evolution.service';
 import { Evolution } from '../models/Evolution.model';
 import { TokenStorageService } from '../services/token-storage.service';
 import { Employe } from '../models/Employe.model';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-evolutioncol',
@@ -16,7 +17,7 @@ import { Employe } from '../models/Employe.model';
 export class EvolutioncolComponent implements OnInit {
   selectedDev;
   submitted;
-  echeance;
+  echeance: Date;
   mobilite;
   poste;
   evolution:Evolution;
@@ -44,9 +45,10 @@ export class EvolutioncolComponent implements OnInit {
        this.selectedDev=evol.type;
        this.poste=evol.posteSouhaite;
        this.mobilite=evol.preferenceGeo;
-       this.echeance=evol.echeance;
+       this.echeance=   evol.echeanceEvolution;
        this.commentairecol=evol.commentaireCol;
        this.avisResp=evol.avisResp;
+      
      }
      },
      err=>{
@@ -63,9 +65,9 @@ export class EvolutioncolComponent implements OnInit {
       if(phase.date>0){
         this.date=phase.date;
       }
-      if(phase.etape >=9 && phase.etape <=10){
+      if(phase.etape >=7 && phase.etape <= 8){
         this.evoldep=true;
-      if(phase.etape== 9){
+      if(phase.etape== 7){
         this.evol=true;
        }
             else{
@@ -103,11 +105,11 @@ Enregistrer(){
        break; 
     } 
     case "3": { 
-      this.evolution=new Evolution(this.employe,this.date,null , this.mobilite,this.echeance, this.commentairecol);
+      this.evolution=new Evolution(this.employe,this.date, 3,null , this.mobilite,this.echeance, this.commentairecol);
       break; 
    } 
    case "4": { 
-    this.evolution=new Evolution(this.employe,this.date,null , this.mobilite,this.echeance, this.commentairecol);
+    this.evolution=new Evolution(this.employe,this.date, 4, null , this.mobilite,this.echeance, this.commentairecol);
     break; 
  } 
     default: { 
@@ -126,7 +128,7 @@ Enregistrer(){
   });
   }
   else{ 
-    this.evolu.commentaireCol=this.commentairecol; this.evolu.echeance=this.echeance;
+    this.evolu.commentaireCol=this.commentairecol; this.evolu.echeanceEvolution=this.echeance;
     this.evolu.posteSouhaite=this.poste; this.evolu.preferenceGeo=this.mobilite;
     this.evolu.type=this.selectedDev;   console.log(this.selectedDev);
     this.evolutionService.updateEvolution(this.evolu).subscribe(res=>{

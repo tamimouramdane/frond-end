@@ -25,12 +25,15 @@ import { TokenStorageService } from '../services/token-storage.service';
 })
 export class FormationcolComponent implements OnInit {
 
-  formations:Array<Formation>=new Array<Formation>();date: any;
+  formations:Array<Formation>=new Array<Formation>();
+  date: any;
   id: any;
   objind: boolean;
   objinddep: boolean;
   errsaisi: boolean;
-;
+  formationspass:Array<Formation>=new Array<Formation>();
+  displayedColumns1: string[]= ['NumFormation', 'nomFormation','objectifPrevu'];
+  dataSource1 ;
   objectifs:Array<EvaluationIndividuelle>=new Array<EvaluationIndividuelle>();
   add:boolean;
   formationForm: FormGroup;
@@ -48,7 +51,7 @@ export class FormationcolComponent implements OnInit {
   selectedDevice: any;
    intituleexiste;
    evalColl;
-  
+   jusification;
   @ViewChild('callAPIDialog') callAPIDialog: TemplateRef<any>;
   constructor(private formationService: FormationService,private formBuilder: FormBuilder,private objectifService:ObjectifService
     ,private dialog: MatDialog ,private phaseService:PhaseService, private employeService:EmployeService,
@@ -94,7 +97,7 @@ export class FormationcolComponent implements OnInit {
       if(phase.date>0){
         this.date=phase.date;
       }
-      if(phase.etape >=3 && phase.etape <=10){
+      if(phase.etape >=3 && phase.etape <=8){
         if(phase.etape == 3){
           this.objind=true;
           this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu'];
@@ -105,10 +108,10 @@ export class FormationcolComponent implements OnInit {
           this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu'];
         }
         if(phase.etape == 7){
-          this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu','evalColl','evalResp','action1'];
+          this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu','evalColl','evalResp','jusification','action1'];
         }
         if(phase.etape >=8){
-          this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu','evalColl','evalResp'];
+          this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu','evalColl','evalResp','jusification'];
         }
         this.objinddep=true;
       }
@@ -141,7 +144,7 @@ export class FormationcolComponent implements OnInit {
     if(element.evalColl >=1 && element.evalColl <=4){ this.selectedDevice=element.evalColl;  }
   
    this.evalColl=element.evalColl;
-
+    this.jusification= element.justification;
     this.enableEdit = true;
     this.enableEditIndex = i;
     console.log(i, e);
@@ -153,6 +156,7 @@ export class FormationcolComponent implements OnInit {
       }else{
         this.errsaisi=false;
       element.evalColl= this.selectedDevice ;
+      element.justification=this.jusification;
     this.formationService.updateFormation(element).subscribe(formation => {
       this.ngOnInit(); 
    },

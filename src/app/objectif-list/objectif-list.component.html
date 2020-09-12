@@ -19,9 +19,10 @@
         Cet objectif est déjà utilisé  </div> 
       <div class="row">
         <div class="col my form-group">
-            <label for="division"> Division</label>
+            <label for="division"> Division - Groupe</label>
             <select class="form-control" formControlName="division">
               <option  value="aucune"  > Aucune</option>
+              <option  value="groupe"  > Groupe</option>
               <option *ngFor="let division of divisions" (ngValue)="division" > {{division.intitulePosition}} </option>
             </select>
         </div>
@@ -34,6 +35,7 @@
         </div>
       </div>
       <div *ngIf="existe" class="alert alert-danger my-2" >Il existe déjà un objectif pour ce (groupe, division ou filiale) </div>
+      <div *ngIf="nonchoisi" class="alert alert-danger my-2" >Veuillez choisir un groupe, division ou filiale </div>
   <!--
         <div *ngIf="selectedDevice=='individuel'">
           <div class="row">
@@ -140,57 +142,60 @@
       </td>   
     </ng-container>
     
-    <ng-container matColumnDef="objectif">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Intitulé Objectif </th>
-      <td  mat-cell *matCellDef="let element index as i;">
-        <span *ngIf="element && element.objectif "> {{element.objectif.nomObjectif}} </span>
-       
-      </td>   
-    </ng-container>
-
-    <ng-container matColumnDef="kpi">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> KPI </th>
-      <td mat-cell *matCellDef="let element index as i;">
-        <span *ngIf="enableEditIndex !==i">  {{element.kpi}} </span>
-        <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="kpieva" required >
-        <div *ngIf="enableEdit && enableEditIndex ==i && kpiv" class="alert alert-danger my-2" >
-         Ce champ est obligatoire </div>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="cible">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Cible </th>
-      <td mat-cell *matCellDef="let element index as i;">
-        <span *ngIf="enableEditIndex !==i">  {{element.cible}} </span>
-        <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="cible" required >
-        <div *ngIf="enableEdit && enableEditIndex ==i && ciblev" class="alert alert-danger my-2" >
-          Ce champ est obligatoire </div>
-      </td>
-    </ng-container>
-
-    <ng-container  matColumnDef="action1">
-      <th mat-header-cell *matHeaderCellDef class="mx-auto " >Action1</th>
-      <td mat-cell *matCellDef="let element index as i;"  >
-     
-   <button *ngIf="enableEdit && enableEditIndex == i" id="saveBtn" class="col btn btn-primary btn-sm px-1  " (click)="saveSegmentcol(element)"
-    type="submit">
-          Enregistrer</button>
-  <button *ngIf="enableEdit && enableEditIndex == i" (click)="cancelcol(i) " class="col btn btn-secondary btn-sm px-1 ">Annuler</button>
-
-        <button *ngIf="!enableEdit" mat-button class="btn btn-primary btn-sm px-1 "  (click)="enableEditMethodcol($event,i, element) ">
-          <mat-icon >launch</mat-icon>Modifier</button>
-        
-      </td>
-    </ng-container>
-
-    <ng-container   matColumnDef="action2">
-      <th mat-header-cell *matHeaderCellDef class="mx-auto " >Action2</th>
-      <td mat-cell *matCellDef="let element index as i;" >
-        <button *ngIf="!enableEdit" mat-button class="btn btn-danger btn-sm px-1 "    (click)="callAPIEva(element)">
-          <mat-icon>delete_outline</mat-icon>Supprimer</button>  
-      </td>
-    </ng-container>
+   
   
+  
+  
+  <ng-container matColumnDef="objectif">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Intitulé Objectif </th>
+    <td  mat-cell *matCellDef="let element index as i;">
+      <span *ngIf="element && element.objectif "> {{element.objectif.nomObjectif}} </span>
+     
+    </td>   
+  </ng-container>
+
+  <ng-container matColumnDef="kpi">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> KPI </th>
+    <td mat-cell *matCellDef="let element index as i;">
+      <span *ngIf="enableEditColIndex !==i">  {{element.kpi}} </span>
+      <input *ngIf="enableEditCol && enableEditColIndex ==i" class="input-table" type="text" [(ngModel)]="kpieva" required >
+      <div *ngIf="enableEditCol && enableEditColIndex ==i && kpiv" class="alert alert-danger my-2" >
+       Ce champ est obligatoire </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="cible">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Cible </th>
+    <td mat-cell *matCellDef="let element index as i;">
+      <span *ngIf="enableEditColIndex !==i">  {{element.cible}} </span>
+      <input *ngIf="enableEditCol && enableEditColIndex ==i" class="input-table" type="text" [(ngModel)]="cible" required >
+      <div *ngIf="enableEditCol && enableEditColIndex ==i && ciblev" class="alert alert-danger my-2" >
+        Ce champ est obligatoire </div>
+    </td>
+  </ng-container>
+
+  <ng-container  matColumnDef="action1">
+    <th mat-header-cell *matHeaderCellDef class="mx-auto " >Action1</th>
+    <td mat-cell *matCellDef="let element index as i;"  >
+   
+ <button *ngIf="enableEditCol && enableEditColIndex == i" id="saveBtn" class="col btn btn-primary btn-sm px-1  " (click)="saveSegmentcol(element)"
+  type="submit">
+        Enregistrer</button>
+<button *ngIf="enableEditCol && enableEditColIndex == i" (click)="cancelcol(i) " class="col btn btn-secondary btn-sm px-1 ">Annuler</button>
+
+      <button *ngIf="!enableEditCol" mat-button class="btn btn-primary btn-sm px-1 "  (click)="enableEditColMethodcol($event,i, element) ">
+        <mat-icon >launch</mat-icon>Modifier</button>
+      
+    </td>
+  </ng-container>
+
+  <ng-container   matColumnDef="action2">
+    <th mat-header-cell *matHeaderCellDef class="mx-auto " >Action2</th>
+    <td mat-cell *matCellDef="let element index as i;" >
+      <button *ngIf="!enableEditCol" mat-button class="btn btn-danger btn-sm px-1 "    (click)="callAPIEva(element)">
+        <mat-icon>delete_outline</mat-icon>Supprimer</button>  
+    </td>
+  </ng-container>
     
     <ng-container matColumnDef="evalMiParcours">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Evaluation mi-parcours </th>
@@ -216,7 +221,7 @@
    <button *ngIf="enableEditEval && enableEditEvalIndex == i"  class="btn btn-primary btn-sm px-3 mr-3 " (click)="saveSegmentEval(element)"
     type="submit">
           Enregistrer</button>
-  <button *ngIf="enableEditEval && enableEditEvalIndex == i" (click)="cancel(i) " class="btn btn-secondary btn-sm px-3 ">Annuler</button>
+  <button *ngIf="enableEditEval && enableEditEvalIndex == i" (click)="cancelEval(i) " class="btn btn-secondary btn-sm px-3 ">Annuler</button>
 
         <button *ngIf="!enableEditEval" mat-button class="btn btn-primary btn-sm px-1 "  (click)="enableEditEvalMethod($event,i, element) ">
           Evaluer</button>
@@ -230,12 +235,16 @@
   <mat-paginator #paginator1 [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
 </div>
-
-<div *ngIf="objcoll" >
+<!--
+<div *ngIf="objcoll" >   -->
+<div>
 <h2 class="card-title my-3"> Objectifs Collectifs des employes </h2>  
 <div *ngIf="!objcollemp" class="alert alert-danger my-2" >
   Pour fixer les objectifs collectifs des employes il faudrait fixer tous les objectifs collectifs d'abord </div>  
-<div *ngIf="objcollemp" class="my-2">
+  <!--
+<div *ngIf="objcoll" >   
+<div *ngIf="objcollemp" class="my-2">-->
+  <div>
 <div >
   <label for="responsable"> Employe</label>
   <select class="form-control" id="employe" [ngModel]="selectedDevice" (ngModelChange)="onChange($event)"
@@ -311,21 +320,7 @@
         <input *ngIf="fix && i==2" class="input-table" type="text" [(ngModel)]="action3" required >
       </td>
     </ng-container>
-<!-- 
-    <ng-container matColumnDef="action1">
-      <th mat-header-cell *matHeaderCellDef class="mx-auto " >Action1</th>
-      <td mat-cell *matCellDef="let element index as i;" >
-   <button *ngIf="enableEditInd && enableEditIndexInd == i" id="saveBtn" class=" btn-primary btn-sm  " (click)="saveSegment(element)"
-    type="submit">
-          Enregistrer</button>
-  <button *ngIf="enableEditInd && enableEditIndexInd == i" (click)="cancel(i) " class="btn btn-secondary btn-sm px-3 ">Annuler</button>
 
-        <button *ngIf="!enableEditInd" mat-button class="btn btn-primary btn-sm  "  (click)="enableEditMethod($event,i, element) ">
-       Fixer</button>
-        
-      </td>
-    </ng-container>
--->
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
@@ -389,12 +384,75 @@
     <ng-container matColumnDef="ponderation">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Pondération </th>
         <td mat-cell *matCellDef="let element index as i;">
-        <span *ngIf="enableEditIndex !==i  && element.ponderation">  {{element.ponderation}} <span>%</span>  </span>
-        <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="ponderation" required >
+        <span *ngIf="enableEditIndIndex !==i  && element.ponderation">  {{element.ponderation}} <span>%</span>  </span>
+        <input *ngIf="enableEditInd && enableEditIndIndex ==i" class="input-table" type="text" [(ngModel)]="ponderation" required >
       </td>
 
     </ng-container>
 
+    <ng-container matColumnDef="plandaction">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Plan d'action </th>
+      <td mat-cell *matCellDef="let element index as i;">
+        <span *ngIf="enableEditIndIndex !==i">  {{element.planAction}} </span>
+        <input *ngIf="enableEditInd && enableEditIndIndex ==i" class="input-table" type="text" [(ngModel)]="plandaction" required >
+      </td>
+    </ng-container>
+
+   
+    <ng-container matColumnDef="action1">
+      <th mat-header-cell *matHeaderCellDef class="mx-auto " >Action1</th>
+      <td mat-cell *matCellDef="let element index as i;" >
+   <button *ngIf="enableEditInd && enableEditIndIndex == i" id="saveBtn" class="btn btn-primary btn-sm px-3 mr-3 " 
+   (click)="saveSegmentInd(element)"
+    type="submit">
+          Enregistrer</button>
+  <button *ngIf="enableEditInd && enableEditIndIndex == i" (click)="cancelInd(i) " class="btn btn-secondary btn-sm px-3 ">Annuler</button>
+
+        <button *ngIf="!enableEditInd" mat-button class="btn btn-primary btn-sm px-1 "  (click)="enableEditIndMethod($event,i, element) ">
+          <mat-icon >launch</mat-icon>Modifier</button>
+        
+      </td>
+    </ng-container>
+   
+    <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+  </table>
+</div>
+
+<div *ngIf=" evaluations && evaluations.length >0 " class="mat-elevation-z8">
+  
+  <mat-form-field class="mat-form-field ml-2 mt-2" >
+    <mat-label><mat-icon class="mr-1 ">search</mat-icon>Recherche</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Ex.division1" >
+  </mat-form-field>
+  <table mat-table matSort [dataSource]="dataSource4"  >
+
+    <ng-container matColumnDef="Numobjectif">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Num Objectif </th>
+      <td mat-cell *matCellDef="let element index as i;"> {{i+1}} </td>
+    </ng-container>
+  
+   
+    <ng-container matColumnDef="intituleObjectif">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Intitulé Objectif </th>
+      <td  mat-cell *matCellDef="let element index as i;">
+        <span *ngIf="element.objectif && enableEditIndex !==i"> {{element.objectif.nomObjectif}} </span>
+        <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table"  type="text"  [(ngModel)]="intituleObjectif" required >
+      </td>
+  
+      
+    </ng-container>
+  
+   
+    <ng-container matColumnDef="ponderation">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Pondération </th>
+      <td mat-cell *matCellDef="let element index as i;">
+        <span *ngIf="enableEditIndex !==i && element.ponderation">  {{element.ponderation}} <span>%</span> </span>
+        <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="ponderation" required >
+      </td>
+    </ng-container>
+  
+      
     <ng-container matColumnDef="plandaction">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Plan d'action </th>
       <td mat-cell *matCellDef="let element index as i;">
@@ -403,7 +461,37 @@
       </td>
     </ng-container>
 
-    <!-- 
+    <ng-container matColumnDef="kpi">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> KPI </th>
+      <td mat-cell *matCellDef="let element index as i;">
+        <span *ngIf="enableEditIndex !==i">  {{element.kpi}} </span>
+        <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="kpieva" required >
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cible">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Cible </th>
+      <td mat-cell *matCellDef="let element index as i;">
+        <span *ngIf="enableEditIndex !==i">  {{element.cible}} </span>
+        <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="cible" required >
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="echeancierDeRealisation">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Echeancier <br> De Realisation </th>
+      <td mat-cell *matCellDef="let element index as i;" >
+        <span *ngIf="enableEditIndex !==i" class="ml-3">  {{element.echeancier | date:'dd/MM/yyyy' }}  </span>
+        <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="echeancierDeRealisation" required >
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="tauxAtteinte">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Taux d'atteinte </th>
+      <td mat-cell *matCellDef="let element index as i;" >
+         <span *ngIf="element.tauxAtteinte" class="ml-3">{{element.tauxAtteinte}} % </span>
+         <span *ngIf="!element.tauxAtteinte" class="ml-3"> / </span>
+      </td>
+    </ng-container>
     <ng-container matColumnDef="action1">
       <th mat-header-cell *matHeaderCellDef class="mx-auto " >Action1</th>
       <td mat-cell *matCellDef="let element index as i;" >
@@ -417,69 +505,19 @@
         
       </td>
     </ng-container>
-    -->
-    <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+
+  
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns4"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns4;" ></tr>
   </table>
-</div>
-
-
-
-</div>
-</div>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
 
 </div>
+</div>
+</div>
 
 </div>
-<!--
-    <h2 class="card-title mt-5"> Objectifs Individuels </h2>
-  <div class="mat-elevation-z8">
-    <mat-form-field class="mat-form-field ml-2 mt-2" >
-      <mat-label>Recherche</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Ex.objectif1" >
-    </mat-form-field>
 
-    <table mat-table matSort [dataSource]="dataSource" >
-    <ng-container matColumnDef="NumObjectif">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Num Objectif  </th>
-        <td mat-cell *matCellDef="let element index as i;"> {{i+1}}  </td>
-      </ng-container>
-    
-     
-      <ng-container matColumnDef="nomobjectif">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Intitule Objectif </th>
-        <td mat-cell *matCellDef="let element index as i;"> 
-        <span *ngIf="enableEditIndexInd !==i"> {{element.nomObjectif}} </span>
-        <input *ngIf="enableEditInd && enableEditIndexInd ==i" class="input-table"  type="text"  [(ngModel)]="obj" required >
-      </td>
-      </ng-container>
-    
-      <ng-container matColumnDef="action1">
-        <th mat-header-cell *matHeaderCellDef class="mx-auto " >Action1</th>
-        <td mat-cell *matCellDef="let element index as i;" >
-     <button *ngIf="enableEditInd && enableEditIndexInd == i" id="saveBtn" class=" btn-primary btn-sm  " (click)="saveSegment(element)"
-      type="submit">
-            Enregistrer</button>
-    <button *ngIf="enableEditInd && enableEditIndexInd == i" (click)="cancel(i) " class="btn btn-secondary btn-sm px-3 ">Annuler</button>
-  
-          <button *ngIf="!enableEditInd" mat-button class="btn btn-primary btn-sm  "  (click)="enableEditMethod($event,i, element) ">
-            <mat-icon >launch</mat-icon>Modifier</button>
-          
-        </td>
-      </ng-container>
-  
-      <ng-container   matColumnDef="action2">
-        <th mat-header-cell *matHeaderCellDef class="mx-auto " >Action2</th>
-        <td mat-cell *matCellDef="let element index as i;" >
-          <button *ngIf="!enableEditInd" mat-button class="btn btn-danger btn-sm px-1 "    (click)="callAPI(element)">
-            <mat-icon>delete_outline</mat-icon>Supprimer</button>  
-        </td>
-      </ng-container>
-    
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" ></tr>
-    </table>
-    <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-  </div>
--->
+</div>

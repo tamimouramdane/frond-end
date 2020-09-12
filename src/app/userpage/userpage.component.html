@@ -15,12 +15,12 @@
           <mat-sidenav-container  >
             <mat-sidenav #sidenav mode="side" opened style="background-color: #004f9e; ">
               <mat-nav-list > 
-        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item [routerLink]="'./profilresponsable'"  > Profil Responsable </a>
+        <a style="padding-left: 20px; padding-right: 20px;" class ="a"  routerLinkActive="active" mat-list-item [routerLink]="'./profilresponsable'"  > Profil Responsable </a>
         <div class="dropdown-divider"></div>
-        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item [routerLink]="'./profilcollaborateur'"> Profil Collaborateur </a>
+        <a style="padding-left: 20px; padding-right: 20px;"  class ="a"  routerLinkActive="active" mat-list-item [routerLink]="'./profilcollaborateur'"> Profil Collaborateur </a>
         <div class="dropdown-divider"></div>
         
-        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item [routerLink]="'./monprofil'"> Mon  Profil </a>
+        <a style="padding-left: 20px; padding-right: 20px;"  class ="a"  routerLinkActive="active" mat-list-item [routerLink]="'./monprofil'"> Identification </a>
         <div class="dropdown-divider"></div>
         <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item  (click)="logout()" >Se déconnecter</a>
         <div class="dropdown-divider"></div>

@@ -27,7 +27,7 @@
   </div>
 
   <div class=" my form-group">
-    <label for="intitulemere">Direction Mère</label>
+    <label for="intitulemere"> Entité de Rattachement </label>
     <select class="form-control " formControlName="intitulemere"    >
       <option *ngFor="let direction of directions" (ngValue)="direction" > {{direction.intitulePosition}} </option>
     </select>
@@ -93,7 +93,7 @@
   </ng-container>
 
   <ng-container matColumnDef="directionMere">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Direction Mère </th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Entité de Rattachement </th>
     <td mat-cell *matCellDef="let element index as i;">
      
       <span *ngIf="element.direction && enableEditIndex !==i">  {{element.direction.intitulePosition}} </span>

@@ -10,21 +10,21 @@
     <input type="text" id="type" class="form-control"  [(ngModel)]="type" readonly>
   </div>
 
-  <div class="col my form-group">
-    <label for="poste"> Poste souhaitée éventuellement </label>
+  <div *ngIf="ty == 2" class="col my form-group">
+    <label for="poste"> Poste souhaité éventuellement </label>
     <input type="text" id="poste" class="form-control"  [(ngModel)]="poste" readonly>
   </div>
-  <div   class="col my form-group">
+  <div *ngIf="ty == 3 || ty == 4"  class="col my form-group">
     <label for="mobilite"> Préférence en cas de mobilité géographique</label>
     <input type="text" id="mobilite" class="form-control"  [(ngModel)]="mobilite"  readonly>
   </div>
   <div  class="col my form-group">
     <label for="echeance"> Echéance souhaitée</label>
-    <input type="text" id="echeance" class="form-control"  [(ngModel)]="echeance"  readonly>
+    <input type=" date:'dd/MM/yyyy' " id="echeance" class="form-control"  [(ngModel)]="echeance"  readonly>
   </div>
 
   <div class="form-group">
-    <label for="exampleFormControlTextarea1">Commentaire du  collaborateur </label>
+    <label for="exampleFormControlTextarea1">Commentaire du collaborateur </label>
     <textarea class="form-control" id="exampleFormControlTextarea1"  [(ngModel)]="commentairecol" readonly ></textarea>
   </div>
  

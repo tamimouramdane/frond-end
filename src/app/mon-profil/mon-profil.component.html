@@ -1,38 +1,41 @@
 <div   class="card mb-5 mt-2" >
 
-  <h2 class="card-header text-center">Mon Profil </h2>
+  <h2 class="card-header text-center">Identification  </h2>
   <div class="card-body mt-0">
     <div class="card-text">
-      <h2>Poste</h2>
+
+      <form [formGroup]="employeForm" ngNativeValidate (ngSubmit)="onSubmitForm()">
+        <h2 >Etat Civil</h2>
+        <div class="row my form-group">
+          <div class="col">
+              <label for="nom">Nom</label>
+              <input type="text" id="nom" class="form-control" formControlName="nom" placeholder="nom "  
+              [ngClass]="{ 'is-invalid': submitted && f.nom.errors, 'is-valid': submitted && f.nom.valid}" [(ngModel)]="nom" readonly  >
+            </div>
+        
+            <div class="col">
+              <label for="prenom">Prénom</label>
+              <input type="text" id="prenom" class="form-control" formControlName="prenom" placeholder="prenom " 
+              [ngClass]="{ 'is-invalid': submitted && f.prenom.errors, 'is-valid': submitted && f.prenom.valid}" [(ngModel)]="prenom" 
+              readonly >
+            </div>
+        </div>
+
+      <h2>Informations Professionnelles</h2>
       <div class="row my form-group">
           <div class="col">
             <label for="intituleposte"> Poste occupé</label>
-            <input  type="text" id="poste" class="form-control"  [(ngModel)]="poste" readonly >
+            <input  type="text" id="poste" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="poste" readonly >
         </div>
    
         <div class="col">
             <label for="responsable"> Responsable</label>
-            <input *ngIf="resp" type="text" id="responsable" class="form-control" [(ngModel)]="resp" readonly >
+            <input *ngIf="resp" type="text" id="responsable" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="resp" readonly >
             <input *ngIf="!resp" type="text" id="responsable" class="form-control"  placeholder="aucun" readonly >
         </div>
       </div>
 
-  <form [formGroup]="employeForm" ngNativeValidate (ngSubmit)="onSubmitForm()">
-    <h2 >Etat Civil</h2>
-    <div class="row my form-group">
-      <div class="col">
-          <label for="nom">Nom</label>
-          <input type="text" id="nom" class="form-control" formControlName="nom" placeholder="nom "  
-          [ngClass]="{ 'is-invalid': submitted && f.nom.errors, 'is-valid': submitted && f.nom.valid}" [(ngModel)]="nom" [readonly]="!mod"  >
-        </div>
-    
-        <div class="col">
-          <label for="prenom">Prénom</label>
-          <input type="text" id="prenom" class="form-control" formControlName="prenom" placeholder="prenom " 
-          [ngClass]="{ 'is-invalid': submitted && f.prenom.errors, 'is-valid': submitted && f.prenom.valid}" [(ngModel)]="prenom" 
-          [readonly]="!mod" >
-        </div>
-    </div>
+
 
  
 
@@ -46,7 +49,7 @@
           </div>
           <input type="email" id="email" class="form-control" formControlName="email" placeholder="email "   
         [ngClass]="{ 'is-invalid': submitted && f.email.errors, 'is-valid': submitted && f.email.valid}" [(ngModel)]="email" 
-        [readonly]="!mod" >
+       readonly>
         </div>
       </div>
 
@@ -54,7 +57,7 @@
         <label for="username">User Name</label>
         <input type="text" formControlName="username" placeholder="username" name="username" class="form-control" id="username"
         [ngClass]="{ 'is-invalid': submitted && f.username.errors, 'is-valid': submitted && f.username.valid}" [(ngModel)]="username"
-        [readonly]="!mod"  >
+       readonly  >
       </div>
       <!-- 
       <div class="col">
@@ -64,6 +67,7 @@
       
       </div>   -->
     </div>
+  <!-- 
     <div *ngIf="!mod" class="form-group text-center" >
             <button  class="btn btn-lg btn-primary "  (click)="Mod()"> 
                 Modifier mon profil
@@ -76,7 +80,7 @@
       <button class="pull-right" style="float: right;"  type="submit" class="btn btn-primary" (click)="Annuler()" >Annuler</button>
            
           </div>
-
+-->
   </form>
 </div>
 </div>

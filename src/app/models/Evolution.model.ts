@@ -8,9 +8,10 @@ export class Evolution {
         public type:number,
         public posteSouhaite ? :string,
         public preferenceGeo ? : string,
-        public echeance ? : number,
+        public echeanceEvolution ? : Date,
         public commentaireCol ? :string,
         public avisResp ? :string,
+        public voteResp ? : number,
         public codeEvolution ?:number,
 
     ){}

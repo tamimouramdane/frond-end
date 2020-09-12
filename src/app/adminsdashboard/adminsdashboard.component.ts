@@ -59,7 +59,7 @@ errdate:boolean=false;
       this.datefixee=phase.date; 
     }
     
-    if(phase.etape>=1 && phase.etape <=10){
+    if(phase.etape>=1 && phase.etape <=8){
       this.selectedDev=phase.etape; }
       else{ this.selectedDev=1;        }
    },

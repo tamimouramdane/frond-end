@@ -5,14 +5,7 @@
     <div class="card-body mt-0">
       <div class="card-text">
  
-        <!--
-        <div class=" my form-group">  <label for="objexistant">Choisir Objectif existant </label>
-          <select class="form-control "  [ngModel]="selectedDev" (ngModelChange)="onChangeDev($event)"  >
-            <option  *ngFor="let objectif of objectifs" (ngValue)="objectif" >
-              {{  objectif.nomObjectif  }} </option>
-          </select>
-                </div>
-              -->   
+   
     <form [formGroup]="objectifForm" ngNativeValidate (ngSubmit)="onSubmitForm()">
     
       <div class="row">
@@ -30,10 +23,11 @@
       <div class="col my form-group">
           <label for="ponderation">Pondération</label>
           <input type="text" id="ponderation" class="form-control" formControlName="ponderation" placeholder="ponderation" 
-          [ngClass]="{ 'is-invalid': submitted && f.ponderation.errors, 'is-valid': submitted && f.ponderation.valid}"   >
+          [ngClass]="{ 'is-invalid': submitted && f.ponderation.errors, 'is-valid': submitted && f.ponderation.valid}" 
+          (change) = "eventHandler()"  >
           <div *ngIf="pondjuste && submitted && f.ponderation.errors  " class="alert alert-danger my-2" >
             Ce champ est obligatoire</div> 
-            <div *ngIf="!pondjuste && submitted && f.ponderation.errors " class="alert alert-danger my-2" >
+            <div *ngIf="pondfausse || submitted && f.ponderation.errors " class="alert alert-danger my-2" >
               Veuillez saisir un nombre entre 1 et 100</div> 
         </div>
        
@@ -68,7 +62,7 @@
 
       <div class="col my form-group">
         <label for="echeancier">Echéancier de réalisation</label>
-        <input type="text" id="echeancier" class="form-control" formControlName="echeancier" placeholder="echeancier" 
+        <input type="date" id="echeancier" class="form-control" formControlName="echeancier" placeholder="echeancier" 
         [ngClass]="{ 'is-invalid': submitted && f.echeancier.errors, 'is-valid': submitted && f.echeancier.valid}"  >
         <div *ngIf="submitted && f.echeancier.errors" class="alert alert-danger my-2" >
           Ce champ est obligatoire</div> 
@@ -375,8 +369,8 @@
     <ng-container matColumnDef="echeancierDeRealisation">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Echeancier <br> De Realisation </th>
       <td mat-cell *matCellDef="let element index as i;" >
-        <span *ngIf="enableEditIndex !==i" class="ml-3">  {{element.echeancierDeRealisation}} </span>
-        <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="echeancierDeRealisation" required >
+        <span *ngIf="enableEditIndex !==i" class="ml-3">  {{element.echeancier  | date:'dd/MM/yyyy' }} </span>
+        <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="date" [(ngModel)]="echeancierDeRealisation" required >
       </td>
     </ng-container>
 

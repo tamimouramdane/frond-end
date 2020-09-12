@@ -30,6 +30,7 @@ import { Ponderation } from '../models/Ponderation.model';
   styleUrls: ['./objectif-list.component.scss']
 })
 export class ObjectifListComponent implements OnInit {
+  enableEditIndIndex;  enableEditCol; enableEditColIndex;
   objectifForm:FormGroup;
   divisions:Array<Division>=new Array<Division>();
   filiales:Array<Filiale>=new Array<Filiale>();
@@ -78,8 +79,11 @@ export class ObjectifListComponent implements OnInit {
    @ViewChild('paginator1', {static: true}) paginator1: MatPaginator;
    @ViewChild(MatSort, {static: true}) sort1: MatSort;
    dataSource2 ;
-   displayedColumns2: string[] = ['typeobjectif','intituledivfil','objectif','ponderation','plandaction'];
-
+   displayedColumns2: string[] = ['typeobjectif','intituledivfil','objectif','ponderation','plandaction','action1'];
+ 
+   displayedColumns4: string[] = ['Numobjectif', 'intituleObjectif', 'ponderation','plandaction','kpi','cible',
+   'echeancierDeRealisation','tauxAtteinte','action1'];
+   dataSource4;
    enableEdit=false;
    enableEditIndex;
    typeobjectif; intituledivfil; intituleObjectif; ponderation; plandaction ;kpieva ;cible;
@@ -101,6 +105,10 @@ export class ObjectifListComponent implements OnInit {
   phase: number;
   evalMiParcours: any;
   evalFinale: any;
+  etape: number;
+  choisi: boolean;
+  nonchoisi: boolean;
+  echeancierDeRealisation: any;
   constructor(private formBuilder: FormBuilder,private divisionService: DivisionService, 
     private router:Router,private filialeService: FilialeService,
     private objectifService : ObjectifService, private evaluationService:EvaluationService
@@ -190,18 +198,19 @@ export class ObjectifListComponent implements OnInit {
       this.date=phase.date;
     }
  
-      if(phase.etape >2 && phase.etape <=10){
-        this.displayedColumns1.pop();
-        this.displayedColumns1.pop();
+      if(phase.etape >=3 && phase.etape <=10){
+       
         this.objcoll=true; 
         this.objcolfix=false;
-        
+        if(phase.etape <=4){
+         this.displayedColumns1 = ['typeobjectif','intituledivfil','objectif','kpi','cible','action1'];
+        }
         if(phase.etape >=5){
         if(phase.etape== 5){
           this.displayedColumns1  = ['typeobjectif','intituledivfil','objectif','kpi','cible','evalMiParcours','action3'];
          }
         if(phase.etape == 6){
-          this.displayedColumns1  = ['typeobjectif','intituledivfil','objectif','kpi','cible','evalMiParcours']; 
+          this.displayedColumns1  = ['typeobjectif','intituledivfil','objectif','kpi','cible','evalMiParcours','action1']; 
         }    
           }
 
@@ -209,7 +218,7 @@ export class ObjectifListComponent implements OnInit {
          if(phase.etape==7){
           this.displayedColumns1  = ['typeobjectif','intituledivfil','objectif','kpi','cible','evalFinale','action3'];
          } else{
-          this.displayedColumns1  = ['typeobjectif','intituledivfil','objectif','kpi','cible','evalFinale'];
+          this.displayedColumns1  = ['typeobjectif','intituledivfil','objectif','kpi','cible','evalFinale','action1'];
          }    
         }
       }
@@ -280,6 +289,12 @@ onChange(newValue) {
     console.log(err.error.message);  console.log('trs5');
    });
   
+   this.evaluationService.getAllEvaluation(String(this.emp.codeEmploye)).subscribe(evas => {
+    this.dataSource4  = new MatTableDataSource<EvaluationIndividuelle>(evas);
+  
+      this.evaluations=evas;     console.log('ajout');
+    });
+
  }
   
 }
@@ -289,6 +304,7 @@ get f() { return this.objectifForm.controls; }
      this.submitted = true;
      this.existe=false;
      this.objectifexiste=false;
+  this.nonchoisi=false;
      const formValue = this.objectifForm.value;
   if(formValue['nomobjectif'].replace(/\s/g, "") ==="" ){
     this.objectifForm.controls['nomobjectif'].setErrors({required:true});
@@ -308,8 +324,9 @@ get f() { return this.objectifForm.controls; }
       if (this.objectifForm.invalid) {
           return;
       }
-    
-  
+    if(formValue['filiale'] == 'aucune' && formValue['division'] == 'aucune' ){
+  this.nonchoisi=true; }
+  else{
   this.type =true;
       if(formValue['filiale'] != 'aucune'){
         this.filiale=this.filiales.filter (filiale => filiale.intitulePosition == formValue['filiale'])[0] ;
@@ -319,14 +336,18 @@ get f() { return this.objectifForm.controls; }
         }
        else{
         if(formValue['division'] != 'aucune'){
+          if(formValue['division'] == 'groupe'){ 
+            this.newobjectif = new Objectif(formValue['nomobjectif'],this.type); console.log('grp');
+          }
+          else{
        this.division= this.divisions.filter (division => division.intitulePosition == formValue['division'])[0] ;
        this.division.type='division';
 
         this.newobjectif = new Objectif(formValue['nomobjectif'],this.type,this.division);
+          }
         }
         else{
-          console.log("gr");
-          this.newobjectif = new Objectif(formValue['nomobjectif'],this.type);
+        
         }
        } 
    
@@ -355,7 +376,7 @@ get f() { return this.objectifForm.controls; }
     });
   console.log(this.newevaluation);
   this.submitted = false;
-  
+    }
   }
  
   Annuler(){
@@ -363,6 +384,7 @@ get f() { return this.objectifForm.controls; }
     this.existe=false;
     this.loading=false;
     this.submitted=false;
+  this.nonchoisi=false;
     this.add=!this.add;
   }
   
@@ -372,9 +394,10 @@ get f() { return this.objectifForm.controls; }
     this.dataSource1.filter = filterValue.trim().toLowerCase();
   }
 
-  enableEditMethodcol(e, i,element) {
+  enableEditColMethodcol(e, i,element) {
     this.ciblev=false;  this.kpiv=false;
-  this.displayedColumns1.pop();
+    if(this.etape == 2){
+  this.displayedColumns1.pop();  }
   if(element.objectif){
    
    if(element.position){ 
@@ -387,8 +410,8 @@ get f() { return this.objectifForm.controls; }
    this.kpieva=element.kpi;
    this.cible=element.cible;
 
-    this.enableEdit = true;
-    this.enableEditIndex = i;
+    this.enableEditCol = true;
+    this.enableEditColIndex = i;
     console.log(i, e);
   }
 
@@ -410,21 +433,25 @@ get f() { return this.objectifForm.controls; }
      err => {
        this.errorMessage = err.error.message;
      });
-    
-     this.displayedColumns1.push('action2');
-      this.enableEdit = false;
-      this.enableEditIndex = null;
+     if(this.etape == 2){
+     this.displayedColumns1.push('action2');  }
+      this.enableEditCol = false;
+      this.enableEditColIndex = null;
       
     
 
   }
   cancelcol(i){
-    this.displayedColumns1.push('action2');
-    this.enableEdit = false;
-    this.enableEditIndex = null;
+    if(this.etape == 2){
+      this.displayedColumns1.push('action2');  }
+    this.enableEditCol = false;
+    this.enableEditColIndex = null;
   }
+  
+  
+  
   deletecol(e,codeDivision){
-    console.log('codeDivision   '+codeDivision);
+   
   }
 
   applyFilter(event: Event) {
@@ -432,33 +459,41 @@ get f() { return this.objectifForm.controls; }
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  enableEditMethod(e, i,element) {
+  enableEditIndMethod(e, i,element) {
   
    this.ponderation=element.ponderation;
-   this.plandaction=element.plandaction;
+   this.plandaction=element.planAction;
  this.enableEditInd = true;
-    this.enableEditIndexInd = i;
+    this.enableEditIndIndex = i;
     console.log(i, e);
   }
 
-  saveSegment(element){
-    if(this.plandaction =='' || this.plandaction ==''){
+  saveSegmentInd(element){
+    if(this.plandaction =='' ){
+
 
     }
     else {
+     
     element.ponderation=this.ponderation;
-    element.plandaction=this.plandaction;
-  /*
-  update ponderation 
-  */
+    element.planAction=this.plandaction;
+
+    this.evaluationService.updatePonderation(element).subscribe(
+      resl=>{
+        this.ngOnInit();
+      },
+      err=>{
+        console.log(err.error.message);  
+      }
+    );
 
     this.enableEditInd = false;
-    this.enableEditIndexInd = null;
+    this.enableEditIndIndex = null;
   }
   }
-  cancel(i){
+  cancelInd(i){
     this.enableEditInd = false;
-    this.enableEditIndexInd = null;
+    this.enableEditIndIndex = null;
   }
   
   AnnulerF(){
@@ -467,7 +502,10 @@ get f() { return this.objectifForm.controls; }
 
   Enregistrer(){
  
-  
+   if(Number(this.pond1) + Number(this.pond2) +Number(this.pond3)) {
+     this.sompond = false;
+   }
+   else{
     console.log(new Ponderation(this.emp,this.evalempcol[0],this.pond1, this.action1));
    this.evaluationService.createPonderation(new Ponderation(this.emp,this.evalempcol[0],this.pond1, this.action1)).subscribe(
      res =>{
@@ -498,6 +536,7 @@ get f() { return this.objectifForm.controls; }
       this.ponderr=false;
       this.remptout=true;
       this.fix=false;
+    }
      // this.ngOnInit();
   }
   
@@ -558,4 +597,55 @@ this.evalFinale =   element.evalFinale;
     this.enableEditEvalIndex = null;
   }
  
+
+  
+  enableEditMethod(e, i,element) {
+    if(element.objectif){ this.intituleObjectif=element.objectif.nomObjectif;  }
+     this.ponderation=element.ponderation;
+     this.plandaction=element.planAction
+     this.kpieva=element.kpi;
+     this.cible=element.cible;
+     this.echeancierDeRealisation=element.echeancierDeRealisation;
+      this.enableEdit = true;
+      this.enableEditIndex = i;
+      console.log(i, e);
+    }
+  
+    saveSegment(element){
+    if(this.intituleObjectif=='' ||this.ponderation=='' || this.plandaction =='' || this.kpieva=='' 
+      || this.cible==''||this.echeancierDeRealisation==''){
+      
+      }else{
+        element.objectif.nomObjectif=this.intituleObjectif;
+        element.ponderation=this.ponderation;
+        element.planAction =this.plandaction;
+        element.kpi=this.kpieva;
+        element.cible=this.cible;
+        element.echeancierDeRealisation=this.echeancierDeRealisation;
+        this.objectifService.updateObjectif( element.objectif).subscribe(eva => {
+       
+       },
+       err => {
+         this.errorMessage = err.error.message;
+       });
+      this.evaluationService.updateEvaluationInd(element).subscribe(eva => {
+        this.ngOnInit(); 
+     },
+     err => {
+       this.errorMessage = err.error.message;
+     });
+    
+    
+      this.enableEdit = false;
+      this.enableEditIndex = null;
+    }
+    }
+    cancel(i){
+ 
+      this.enableEdit = false;
+      this.enableEditIndex = null;
+    }
+    delete(e,codeDivision){
+      
+    }
 }

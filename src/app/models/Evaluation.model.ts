@@ -10,7 +10,6 @@ constructor(
 	public annee:number,
 	public  ponderation ? :number,
 	public  planAction ?:string,
-	public  echeancierDeRealisation ? :number,
 	public  evalMiParcours ? :number,
 	public  evalFinale ? :number,
 	public  codeEvaluation ? :number

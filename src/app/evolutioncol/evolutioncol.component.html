@@ -14,22 +14,32 @@
     </select>
   </div>
 
-  <div class="col my form-group">
+  <div *ngIf="evoldep && !eval" class="col my form-group">    <label > Type d'evolution choisi </label>
+    <input *ngIf="evoldep && !eval && selectedDev==0" type="text"  class="form-control"   value="Aucune"  readonly>
+    <input *ngIf="evoldep && !eval && selectedDev==1" type="text"  class="form-control"  value="Plus de responsabilité" readonly>
+    <input *ngIf="evoldep && !eval && selectedDev==2" type="text"  class="form-control"  value="Changement de fonction (métier)"  readonly>
+    <input *ngIf="evoldep && !eval && selectedDev==3" type="text"  class="form-control"   value="Mobilité Nationale"  readonly>
+    <input *ngIf="evoldep && !eval && selectedDev==4" type="text"  class="form-control"   value="Mobilité à l'international"  readonly>
+  </div>
+
+
+
+ 
+  <div *ngIf="selectedDev==2" class="col my form-group">
     <label for="poste"> Poste souhaitée éventuellement </label>
     <input type="text" id="poste" class="form-control" 
-   
     [(ngModel)]="poste"  [readonly]="!evol || !eval">
   </div>
-  <div   class="col my form-group">
+  <div *ngIf="selectedDev==3 || selectedDev==4"  class="col my form-group">
     <label for="mobilite"> Préférence en cas de mobilité géographique</label>
     <input type="text" id="mobilite" class="form-control"  
     [(ngModel)]="mobilite"  [readonly]="!evol || !eval">
   </div>
   <div  class="col my form-group">
     <label for="echeance"> Echéance souhaitée</label>
-    <input type="text" id="echeance" class="form-control"  
+    <input type="date" id="echeance" class="form-control"  
    
-    [(ngModel)]="echeance"  [readonly]="!evol || !eval">
+    [(ngModel)]="echeance "  [readonly]="!evol || !eval">
   </div>
 
   <div class="form-group">

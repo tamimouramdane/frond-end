@@ -12,7 +12,7 @@ export class EvaluationIndividuelle extends Evaluation{
     public Annee:number,
     public  ponderation:number,
 	public  planAction:string,
-    public echeancierDeRealisation ?: number,
+    public echeancier ?: Date,
     public employe ?:Employe,
     public tauxAtteinte ?: number,
     public  evalMiParcours ? :number,
@@ -35,7 +35,6 @@ export class EvaluationIndividuelle extends Evaluation{
              Annee,
              ponderation,
              planAction,
-            echeancierDeRealisation,
             evalMiParcours,
             evalFinale 
           , codeEvaluation );

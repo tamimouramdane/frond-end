@@ -21,6 +21,7 @@ import {MatFormFieldControl} from '@angular/material/form-field'
 import {MatPaginatorModule, MatPaginator} from '@angular/material/paginator';
 import { PhaseService } from '../services/phase.service';
 import { Ponderation } from '../models/Ponderation.model';
+import { FixationcolComponent } from '../fixationcol/fixationcol.component';
 
 
 @Component({
@@ -71,12 +72,13 @@ evaluations:Array<EvaluationIndividuelle>=new Array<EvaluationIndividuelle>();
    enableEdit=false;
    enableEditIndex;
    intituleObjectif; ponderation; plandaction ;kpieva ;cible;
-   echeancierDeRealisation;
+   echeancierDeRealisation:Date ;
    coll:Employe;
    @Output() messageEvent = new EventEmitter<boolean>();
    @ViewChild('callAPIDialog') callAPIDialog: TemplateRef<any>;
   objectifexiste: boolean;
   objdep: boolean;
+  pondfausse: boolean;
   constructor(private route: ActivatedRoute, private formBuilder: FormBuilder ,
     private employeService:EmployeService, private evaluationService:EvaluationService
     , private evaluationService2:EvaluationService,private tokenStorageService:TokenStorageService,
@@ -127,7 +129,7 @@ callAPI(element) {
       this.dataSource  = new MatTableDataSource<EvaluationIndividuelle>(evas);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-        this.evaluations=evas;   
+        this.evaluations=evas;     console.log('ajout');
       });
   },
   err => { 
@@ -153,13 +155,13 @@ callAPI(element) {
           else{
             this.objind=false;
           }
-     if(phase.etape >=4 && phase.etape <=10) {
+     if(phase.etape >=4 && phase.etape <=8) {
        this.displayedColumns.pop();
        this.displayedColumns.pop();
        if(phase.etape == 6){
         this.displayedColumns2 = ['typeobjectif','intituledivfil','objectif', 'ponderation','plandaction','kpi','cible','evalMiParcours'];
        }
-       if(phase.etape >=8){
+       if(phase.etape == 8){
         this.displayedColumns2 = ['typeobjectif','intituledivfil','objectif', 'ponderation','plandaction','kpi','cible','evalFinale'];
        }
      }    
@@ -192,6 +194,7 @@ callAPI(element) {
   onSubmitForm() {
     this.submitted = true;
     this.pondjuste=true;
+    this.pondfausse =false;
     const formValue = this.objectifForm.value;
     if(formValue['nomobjectif'].replace(/\s/g, "") ==="" ){
       this.objectifForm.controls['nomobjectif'].setErrors({required:true});
@@ -201,12 +204,12 @@ callAPI(element) {
    
       this.objectifForm.controls['ponderation'].setErrors({required:true});
     }
-    
+    /*
     if(isNaN(Number(formValue['ponderation'])) || Number(formValue['ponderation'])>100 || Number(formValue['ponderation']) < 1 ){
       this.pondjuste=false;
       this.objectifForm.controls['ponderation'].setErrors({maxlength:true});
     }
-
+    */
     if(formValue['plandaction'].replace(/\s/g, "") ==="" ){
       this.objectifForm.controls['plandaction'].setErrors({required:true});
      
@@ -231,6 +234,8 @@ callAPI(element) {
     console.log(this.neweva);
     this.evaluationService2.createEvaluationInd(this.neweva).subscribe( 
       ev => {  
+     
+
     this.ngOnInit();
               },
        err => { 
@@ -250,6 +255,7 @@ callAPI(element) {
     Annuler(){
       this.loading=false;
       this.submitted=false;
+      this.pondfausse =false;
       this.add=!this.add;
     }
     onChangeDev(e){
@@ -276,7 +282,7 @@ callAPI(element) {
    this.plandaction=element.planAction
    this.kpieva=element.kpi;
    this.cible=element.cible;
-   this.echeancierDeRealisation=element.echeancierDeRealisation;
+   this.echeancierDeRealisation=element.echeancier;
     this.enableEdit = true;
     this.enableEditIndex = i;
     console.log(i, e);
@@ -284,7 +290,7 @@ callAPI(element) {
 
   saveSegment(element){
   if(this.intituleObjectif=='' ||this.ponderation=='' || this.plandaction =='' || this.kpieva=='' 
-    || this.cible==''||this.echeancierDeRealisation==''){
+    || this.cible==''){
     
     }else{
       element.objectif.nomObjectif=this.intituleObjectif;
@@ -292,7 +298,13 @@ callAPI(element) {
       element.planAction =this.plandaction;
       element.kpi=this.kpieva;
       element.cible=this.cible;
-      element.echeancierDeRealisation=this.echeancierDeRealisation;
+      element.echeancier=this.echeancierDeRealisation;
+      this.objectifService.updateObjectif( element.objectif).subscribe(eva => {
+       
+      },
+      err => {
+        this.errorMessage = err.error.message;
+      });
     this.evaluationService.updateEvaluationInd(element).subscribe(eva => {
       this.ngOnInit(); 
    },
@@ -313,40 +325,17 @@ callAPI(element) {
   delete(e,codeDivision){
     console.log('codeDivision   '+codeDivision);
   }
-/*
-    enableEditMethod(e, i) {
-      this.kpi=this.evaluations[i].kpi;
-      this.pond=this.evaluations[i].ponderation;
-      this.plan=this.evaluations[i].planAction;
-      this.nomobj=this.evaluations[i].objectif.nomObjectif;
-      this.enableEdit = true;
-      this.enableEditIndex = i;
-      console.log(i, e);
-    }
 
-    saveSegment(i){
-      console.log(this.kpi);
-     
-      this.evaluations[i].objectif.nomObjectif=this.nomobj;
-      this.evaluations[i].ponderation=this.pond;
-      this.evaluations[i].planAction=this.plan;
-       this.evaluations[i].kpi=this.kpi;
+  eventHandler(){
+  console.log(  this.f.ponderation.value );
+  if(this.f.ponderation.value== "" || isNaN(Number(this.f.ponderation.value))  
+  || this.f.ponderation.value <=0 || this.f.ponderation.value >100){
+    this.pondfausse =true;
+  }
+  else{
+    this.pondfausse =false;
+  }
+  }
 
-       this.evaluationService.updateEvaluation(this.evaluations[i].objectif.codeObjectif,
-
-
-        new Evaluation( this.evaluations[i].objectif, this.evaluations[i].typeEvaluation,
-        this.pond, this.plan,this.kpi,  this.evaluations[i].cible, this.evaluations[i].employe ));
-
-
-
-      this.enableEdit = false;
-      this.enableEditIndex = null;
-    }
-    cancel(i){
-      this.enableEdit = false;
-      this.enableEditIndex = null;
-    }
-    */
 }
 

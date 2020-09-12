@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CanActivate, ActivatedRoute, Router } from '@angular/router';
 import { EmployeService } from '../services/Employe.service';
 import { Evaluation } from '../models/Evaluation.model';
@@ -11,6 +11,9 @@ import { EvaluationService } from '../services/Evaluation.service';
 import { ObjectifService } from '../services/Objectif.service';
 import { EvaluationIndividuelle } from '../models/EvaluationIndividuelle.model';
 import { PhaseService } from '../services/phase.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-evaluation',
@@ -21,9 +24,12 @@ export class EvaluationComponent implements OnInit {
   coll:Employe;
   id:number;
 a:string;
+tro;
+fort; amel;
 evalmi:boolean;
 evaluations:Array<EvaluationIndividuelle>=new Array<EvaluationIndividuelle>();
   employe:Employe;
+  commentaireRespMiPar;  commentaireRespFin;
   evalf;
   add:boolean;
   selectedDev;
@@ -34,6 +40,10 @@ evaluations:Array<EvaluationIndividuelle>=new Array<EvaluationIndividuelle>();
    selectedDevice;
    evaluationind :EvaluationIndividuelle;
    objselect :EvaluationIndividuelle;
+   displayedColumns: string[] ;
+   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+   @ViewChild(MatSort, {static: true}) sort: MatSort;
+   dataSource ;
    coleval:boolean;
    evalForm:FormGroup;
    errorMessage = '';
@@ -42,6 +52,13 @@ evaluations:Array<EvaluationIndividuelle>=new Array<EvaluationIndividuelle>();
    eval:boolean=false;
   date: number;
   evalmidep: boolean;
+  enableEdit: boolean;
+  enableEditIndex: any;
+  evalMiParCollab: any;
+  evalMiParcours: any;
+  evalFinCollab: any;
+  evalFinale: any;
+  etape: number;
   constructor( private route: ActivatedRoute, private employeService:EmployeService,
      private evaluationService:EvaluationService,private objectifService:ObjectifService
      , private formBuilder: FormBuilder,private phaseService:PhaseService) { }
@@ -55,27 +72,43 @@ evaluations:Array<EvaluationIndividuelle>=new Array<EvaluationIndividuelle>();
   this.employeService.getEmployeUser(Number(this.a)).subscribe(emp => {
     this.coll=emp;  
     this.evaluationService.getAllEvaluation(String(this.coll.codeEmploye)).subscribe(evas => {
+      this.dataSource  = new MatTableDataSource<EvaluationIndividuelle>(evas);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
       this.evaluations=evas;
       });
   }  );
-  this.phaseService.getPhase().subscribe(phase => {
+  this.phaseService.getPhase().subscribe(phase => {  this.etape=phase.etape;
     if(phase.date>0){
       this.date=phase.date;
     }
-    if(phase.etape >=5 && phase.etape <=10){
+    if(phase.etape >=5 && phase.etape <=8){
       this.evalmidep=true;
+     
     if(phase.etape== 5){
       this.evalmi=true;
+      this.displayedColumns = ['Numobjectif', 'intituleObjectif', 'ponderation','evalMiParCollab','comColMi','evalMiParcours','commentaireRespMiPar','action1'];
+      return;
      }
-          else{
-        
-            this.evalmi=false;
-          }
+     this.evalmi=false;  
+      
+    if(phase.etape ==6){
+      this.displayedColumns = ['Numobjectif', 'intituleObjectif', 'ponderation','evalMiParCollab','comColMi','evalMiParcours','commentaireRespMiPar'];
+      return;
+     }   
      if(phase.etape==7){
       this.evalf=true;
-     } else{
-         this.evalf=false;
-     }    
+      this.displayedColumns = ['Numobjectif', 'intituleObjectif', 'ponderation','evalFinCollab','commentaireCollabFin','evalFinale','comFi','action1'];
+      return;
+     } 
+     this.evalf=false;
+     if(phase.etape==8){
+     
+      this.displayedColumns = ['Numobjectif', 'intituleObjectif', 'ponderation','evalFinCollab','commentaireCollabFin','evalFinale','comFi'];   
+      return;
+     } 
+     
+    
         }
    },
    err =>{
@@ -87,67 +120,55 @@ evaluations:Array<EvaluationIndividuelle>=new Array<EvaluationIndividuelle>();
 
   initForm() {
     this.evalForm = this.formBuilder.group({
-      evalreslmi: ['',Validators.required ],
+      evalreslmi: ['' ],
       commentaireresmi: [''],
       evalreslfi:[''],
       commentaireresfi:[''],  
     });
   }
 
-  get f() { return this.evalForm.controls; }
-  onSubmitForm(){
-    this.submitted = true;
-    if (this.evalForm.invalid) {
-        return;
-    }
-   const formValue = this.evalForm.value;
-   this.objselect.evalMiParcours=formValue['evalreslmi'];
-  this.objselect.commentaireRespMiPar=formValue['commentaireresmi'];
-   this.objselect.evalFinale=formValue['evalreslfi'];
-   this.objselect.commentaireRespFin= formValue['commentaireresfi'];
-   this.evaluationService.updateEvaluationInd(this.objselect).subscribe(eva => {
+
+
+  enableEditMethod(e, i,element) { 
+    this.evalMiParCollab = element.evalMiParCollab;
+    this.evalMiParcours = element.evalMiParcours;
+    this.evalFinCollab = element.evalFinCollab;
+    this.evalFinale = element.evalFinale;
+    this.commentaireRespMiPar=element.commentaireRespMiPar;
+    this.commentaireRespFin= element.commentaireRespFin;
+   
+   
+      this.enableEdit = true;
+      this.enableEditIndex = i;
+      console.log(i, e);
     
- },
- err => {
-   this.errorMessage = err.error.message;
-   console.log(this.errorMessage);
- });
- this.submitted = false;
- this.eval=false;
   }
+    saveSegment(element){
 
-  onChangeDev(e){
-    this.selectedDevice=e;
-  if(e!= ""){
-    this.add=true;
-    console.log("ov  " + e);
-   this.objselect=this.evaluations.find(eva=> eva.objectif.nomObjectif== e);
+        element.evalMiParCollab = this.evalMiParCollab;
+        element.evalMiParcours = this.evalMiParcours;
+        element.evalFinCollab = this.evalFinCollab;
+        element.evalFinale = this.evalFinale;
+        element.commentaireRespMiPar=  this.commentaireRespMiPar;
+        element.commentaireRespFin=  this.commentaireRespFin;
+      this.evaluationService.updateEvaluationInd(element).subscribe(eva => {
+        this.ngOnInit(); 
+     },
+     err => {
+       this.errorMessage = err.error.message;
+     });
+    
+    
+      this.enableEdit = false;
+      this.enableEditIndex = null;
+    
+    }
 
-  this.evalcollmi=this.objselect.evalMiParCollab;
-   this.evalcollfi=this.objselect.evalFinCollab;
-   this.commentairecolmi=this.objselect.commentaireCollabMiPar;
-   this.commentairecolfi=this.objselect.commentaireCollabFin;
-   if(!this.objselect.evalMiParCollab){
-     this.coleval=false;
-   }
-   else{
-    this.evaresmi=this.objselect.evalMiParcours;
-    this.evaresf=this.objselect.evalFinale;
-    this.commi=this.objselect.commentaireRespMiPar;
-    this.comf=this.objselect.commentaireRespFin;
-  }
-  }
-  else{
-    this.add=false;
-  }
-  }
- 
-  Annuler(){
-    this.eval=false;
-  }
-
-  Evaluer(){
-  this.eval=true;
-  }
-
+    cancel(i){
+  
+      this.enableEdit = false;
+      this.enableEditIndex = null;
+    }
+   
+    
 }

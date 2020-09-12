@@ -4,6 +4,7 @@ import { map } from "rxjs/operators";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import {environment} from "src/environments/environment";
+import { Form } from '@angular/forms';
  
 @Injectable()
 export class FormationService {
@@ -14,7 +15,11 @@ export class FormationService {
   getAllFormations(c: number): Observable<Formation[]>{
     return this.http.get<Formation[]>(this.baseUrl+'/all/'+c);
   }
-   
+  
+  getFormationPas(c:number):Observable<Formation[]>{
+    return this.http.get<Formation[]>(this.baseUrl+'/lastYear/'+c);
+  }
+  
   createFormation(formation: Formation): Observable<Formation> {
     return this.http.post<Formation>(this.baseUrl+'/add', formation);
   }

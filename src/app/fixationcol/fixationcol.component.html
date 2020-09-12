@@ -114,7 +114,7 @@
     <ng-container matColumnDef="echeancierDeRealisation">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Echeancier <br> De Realisation </th>
       <td mat-cell *matCellDef="let element index as i;" >
-        <span class="ml-3">{{element.echeancierDeRealisation}}  </span> 
+        <span class="ml-3">{{element.echeancier | date:'dd/MM/yyyy'}}  </span> 
       </td>
     </ng-container>
 

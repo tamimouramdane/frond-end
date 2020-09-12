@@ -65,7 +65,7 @@ export class FixationcolComponent implements OnInit {
           this.dataSource  = new MatTableDataSource<EvaluationIndividuelle>(evas);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-          this.evaluations=evas;       
+          this.evaluations=evas;        console.log('ajout');
           console.log("marche"+ evas.length);
           });
           

@@ -13,19 +13,19 @@
           <mat-sidenav-container >
             <mat-sidenav #sidenav mode="side" opened style="background-color: #004f9e;" >
               <mat-nav-list > 
-        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item [routerLink]="'./divisions'"  > Divisions </a>
+        <a style="padding-left: 20px; padding-right: 20px; " class ="a"  mat-list-item [routerLink]="'./divisions'" routerLinkActive="active" > Divisions </a>
         <div class="dropdown-divider"></div>
-        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item routerLinkActive="active" [routerLink]="'./filiales'"> Filiales  </a>
+        <a style="padding-left: 20px; padding-right: 20px; " class ="a"  mat-list-item  [routerLink]="'./filiales'" routerLinkActive="active"> Filiales  </a>
         <div class="dropdown-divider"></div>
-        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item [routerLink]="'./directions'"> Directions </a>
+        <a style="padding-left: 20px; padding-right: 20px; " class ="a" mat-list-item [routerLink]="'./directions'" routerLinkActive="active"> Directions </a>
         <div class="dropdown-divider"></div>
-        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item [routerLink]="'./services'"> Services </a>
+        <a style="padding-left: 20px; padding-right: 20px;" class ="a" mat-list-item [routerLink]="'./services'" routerLinkActive="active"> Services </a>
         <div class="dropdown-divider"></div>
-        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item [routerLink]="'./postes'"> Postes </a>
+        <a style="padding-left: 20px; padding-right: 20px;" class ="a" mat-list-item [routerLink]="'./postes'" routerLinkActive="active"> Postes </a>
         <div class="dropdown-divider"></div>
-        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item [routerLink]="'./employes'"> Employes </a>
+        <a style="padding-left: 20px; padding-right: 20px" class ="a" mat-list-item [routerLink]="'./employes'" routerLinkActive="active"> Employes </a>
         <div class="dropdown-divider"></div>
-        <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item [routerLink]="'./objectifs'"> Objectifs </a>
+        <a style="padding-left: 20px; padding-right: 20px;" class ="a" mat-list-item [routerLink]="'./objectifs'" routerLinkActive="active"> Objectifs </a>
         <div class="dropdown-divider"></div>
         <a style="padding-left: 20px; padding-right: 20px; color: white;" mat-list-item  (click)="logout()">Se déconnecter</a>
         <div class="dropdown-divider"></div>
@@ -50,16 +50,14 @@
                   <select *ngIf="!errdate" class="form-control pr-2 "  nom="etape"  id="etape" 
                    [ngModel]="selectedDev" (ngModelChange)="onChangeDev($event)"   >
                   
-                    <option  value="1" [disabled]="selectedDev !=10"  > Initialisation</option>
-                    <option  value="2" [disabled]="selectedDev !=1" > Fixation Objectifs Collectifs</option>
-                    <option  value="3" [disabled]="selectedDev !=2 || obcol"  >Debut de la Fixation des Objectifs Individuels</option>
-                    <option  value="4" [disabled]="selectedDev !=3" >Fin de la Fixation des Objectifs Individuels </option>
-                    <option  value="5" [disabled]="selectedDev !=4"  >Debut de l'Evaluation Mi-parcours  </option>
-                    <option  value="6" [disabled]="selectedDev !=5"  >Fin de l'Evaluation Mi-parcours   </option>
-                    <option value="7" [disabled]="selectedDev !=6" > Debut de l'Evaluation Finale</option>
-                    <option value="8" [disabled]="selectedDev !=7" >Fin de l'Evaluation Finale</option>
-                    <option value="9" [disabled]="selectedDev !=8" >Debut de l'Evolution</option>
-                    <option value="10" [disabled]="selectedDev !=9">Fin de l'Evolution</option>
+                    <option  value="1" [disabled]="selectedDev !=8"  > Initialisation</option>
+                    <option  value="2"  > Fixation Objectifs Collectifs</option>
+                    <option  value="3"  >Debut de la Fixation des Objectifs Individuels</option>
+                    <option  value="4" >Fin de la Fixation des Objectifs Individuels </option>
+                    <option  value="5"  >Debut de l'Evaluation Mi-parcours  </option>
+                    <option  value="6"   >Fin de l'Evaluation Mi-parcours   </option>
+                    <option value="7" > Debut de l'Evaluation Finale</option>
+                    <option value="8"  >Fin de l'Evaluation Finale</option>
                     
                   </select>
               </div>   

@@ -18,8 +18,16 @@
     <input type="text" id="objectifPrevu" class="form-control" formControlName="objectifPrevu" placeholder="objectif Prevu " 
     [ngClass]="{ 'is-invalid': submitted && f.objectifPrevu.errors, 'is-valid': submitted && f.objectifPrevu.valid}"   > 
   </div>
- 
 </div>
+
+<div class="col my form-group">
+  <label for="objectifPrevu"> Demandé lors du recueil des besoins de l'année en cours</label>
+  <select  class="form-control " formControlName="demande"  [ngModel]="selectedDevicede" (ngModelChange)="onChangede($event)"  >
+    <option value="true" > Oui</option>
+    <option value="false"> Non</option>
+  </select>
+</div>
+
   <div class=" my form-group">
   
     <button  class="pull-left"   type="submit" class="btn btn-success"  >Ajouter la formation</button>
@@ -74,6 +82,17 @@
       <td mat-cell *matCellDef="let element index as i;"> {{element.objectifPrevu}} 
       </td>
     </ng-container>
+  
+    <ng-container matColumnDef="demande">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Demandé lors du recueil des besoins <br>
+      de l'année en cours</th>
+      <td mat-cell *matCellDef="let element index as i;">
+          <span *ngIf="element.demande">  Oui  </span> 
+          <span *ngIf="! element.demande">  Non   </span>
+        
+      
+      </td>
+    </ng-container>
 
     <ng-container   matColumnDef="action2">
       <th mat-header-cell *matHeaderCellDef class="mx-auto " >Action2</th>
@@ -118,6 +137,12 @@
       </td>
     </ng-container>
 
+    
+    <ng-container matColumnDef="justification">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Si non ou partiellement, pourquoi ?  </th>
+      <td mat-cell *matCellDef="let element index as i;">   {{element.justification}}   
+      </td>
+    </ng-container>
   
     <ng-container matColumnDef="action1">
       <th mat-header-cell *matHeaderCellDef class="mx-auto " >Action1</th>
@@ -132,12 +157,65 @@
         
       </td>
     </ng-container>
-  
-  
-  
+ 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
   </div>
 </div>
+
+<div *ngIf=" formationspass && formationspass.length>0" class="mat-elevation-z8">
+  <h2 >Les Formations de l'année écoulée </h2>
+  <table mat-table matSort [dataSource]="dataSource1"  >
+  
+    <ng-container matColumnDef="NumFormation">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Num Formation </th>
+      <td mat-cell *matCellDef="let element index as i;"> {{i+1}} </td>
+    </ng-container>
+   
+    <ng-container matColumnDef="nomFormation">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Intitulé Formation </th>
+      <td mat-cell *matCellDef="let element index as i;">  {{element.nomFormation}} </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="objectifPrevu">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Objectif Prévu  </th>
+      <td mat-cell *matCellDef="let element index as i;"> {{element.objectifPrevu}} 
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="evalColl">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Evaluation Collaborateur  </th>
+      <td mat-cell *matCellDef="let element index as i;"> 
+          <span *ngIf="element.evalColl>=5 || element.evalColl <=0"> / </span> 
+          <span *ngIf="element.evalColl==1">  Non atteint  </span> 
+          <span *ngIf="element.evalColl==2">  Partiel   </span> 
+          <span *ngIf="element.evalColl==3">   atteint  </span> 
+          <span *ngIf="element.evalColl==4">  Dépassé   </span>  </td>
+    </ng-container>
+  
+   
+       
+    <ng-container matColumnDef="evalResp">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Evaluation Responsable </th>
+      <td mat-cell *matCellDef="let element index as i;">
+    
+          <span *ngIf="element.evalResp>=5 || element.evalResp <=0"> / </span> 
+          <span *ngIf="element.evalResp==1">  Non atteint  </span> 
+          <span *ngIf="element.evalResp==2">  Partiel   </span> 
+          <span *ngIf="element.evalResp==3">   atteint  </span> 
+          <span *ngIf="element.evalResp==4">  Dépassé   </span> 
+       
+    
+      </td>
+    </ng-container>
+
+   
+  
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>

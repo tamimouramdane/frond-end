@@ -34,7 +34,7 @@ export class EmployeListComponent implements OnInit {
   errorMessage = '';
    loading = false;
    submitted = false;
-   displayedColumns: string[] = ['Numemploye', 'nom', 'prenom','posteoccupe','responsable','action1','action2'];
+   displayedColumns: string[] = ['Numemploye', 'nom', 'prenom','posteoccupe','responsable','validation','action1','action2'];
    @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
    @ViewChild(MatSort, {static: true}) sort: MatSort;
    dataSource ;
@@ -85,6 +85,8 @@ export class EmployeListComponent implements OnInit {
     this.posteService.getAllPostes().subscribe(postes => {
       this.postes = postes;  
     });
+
+    
   }
   
   ajouterEmploye(){
