@@ -84,13 +84,12 @@
     </ng-container>
   
     <ng-container matColumnDef="demande">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Demandé lors du recueil des besoins <br>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Demandé lors du recueil des <br> besoins 
       de l'année en cours</th>
       <td mat-cell *matCellDef="let element index as i;">
           <span *ngIf="element.demande">  Oui  </span> 
           <span *ngIf="! element.demande">  Non   </span>
-        
-      
+
       </td>
     </ng-container>
 
@@ -166,7 +165,7 @@
 </div>
 
 <div *ngIf=" formationspass && formationspass.length>0" class="mat-elevation-z8">
-  <h2 >Les Formations de l'année écoulée </h2>
+  <h2 class="my-3 mx-3">Les Formations de l'année écoulée </h2>
   <table mat-table matSort [dataSource]="dataSource1"  >
   
     <ng-container matColumnDef="NumFormation">
@@ -206,12 +205,15 @@
           <span *ngIf="element.evalResp==2">  Partiel   </span> 
           <span *ngIf="element.evalResp==3">   atteint  </span> 
           <span *ngIf="element.evalResp==4">  Dépassé   </span> 
-       
-    
       </td>
     </ng-container>
 
-   
+    
+    <ng-container matColumnDef="justification">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Si non ou partiellement, pourquoi ?  </th>
+      <td mat-cell *matCellDef="let element index as i;">   {{element.justification}}   
+      </td>
+    </ng-container>
   
   
     <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>

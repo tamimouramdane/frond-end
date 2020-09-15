@@ -1,5 +1,8 @@
 <h1 class="mt-3 mb-2" >VALIDATION DES OBJECTIFS  </h1>
-<div class="row">
+
+
+<div *ngIf="valmidep" id="content" #content > 
+  <div class="row">
     <div class="col my form-group">
       <label for="res">Responsable</label>
       <input type="text" id="res" class="form-control" readonly  [(ngModel)]="resp">
@@ -11,8 +14,6 @@
       
     </div>
   </div>
-
-<div *ngIf="valmidep"> 
 <h2 class="mt-3 mb-2" >OBJECTIFS COLLECTIFS </h2>
 <div *ngIf=" ponderations && ponderations.length>0" class="mat-elevation-z8 table-responsive my-3">
   <table mat-table matSort [dataSource]="dataSource2"  >
@@ -129,42 +130,8 @@
   </table>
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
-<!--
-<div  class="card mb-5 mt-2" >
-    <h2 class="card-header text-center"> Validation Collaborateur </h2>
-    <div class="card-body mt-0">
-      <div class="card-text">
-       <div class="row">
 
-         <div class="col-md-3 my form-group">
-            <label >Visa</label>
-      
-              <input *ngIf="!valmi || !eval" type="text" class="form-control" [(ngModel)]="visa" [readonly]="!valmi || !eval" >
-              <select *ngIf="valmi && eval" class="form-control " [ngModel]="1"  (ngModelChange)="onChange($event)"  >
-                <option value="1" > Satisfait </option>
-                <option value="2"> Non satisfait</option>       
-              </select>
-          </div>
-    
-     
-            <div class="col-md-3 my form-group">
-            <label>Date </label>
-              <input type="date"  class="form-control"  
-                [(ngModel)]="datevalid"  [readonly]="!valmi || !eval" >
-            </div>
 
-            <div class="col-md-6 my form-group">
-                <label > Commentaire</label>
-                <textarea class="form-control" 
-                   [(ngModel)]="commencol"  [readonly]="!valmi || !eval"  ></textarea>
-              </div>
-       </div>
-        
-     
-</div>
-</div>
-</div>
--->
 <div  class="card mb-5 mt-2" >
   <h2 class="card-header text-center"> Validation Collaborateur </h2>
   <div class="card-body mt-0">
@@ -174,13 +141,13 @@
           <div class="col-md-3 my form-group">
           <label>Date </label>
             <input type="date"  class="form-control"  
-              [(ngModel)]="datevalidcol"  [readonly]="(!valmi && !valfi)  || !eval" >
+              [(ngModel)]="datevalidcol"  [readonly]="(!valmi && !valfi)  || val" >
           </div>
 
           <div class="col-md-6 my form-group">
               <label > Commentaire</label>
               <textarea class="form-control" 
-                 [(ngModel)]="commencol" [readonly]="(!valmi && !valfi)  || !eval" ></textarea>
+                 [(ngModel)]="commencol" [readonly]="(!valmi && !valfi)  || val" ></textarea>
             </div>
 
             <div  class="col-md-3 my form-group">
@@ -188,7 +155,7 @@
                 <input  type="text" class="form-control"  readonly >
             </div>
      </div>
-     <div *ngIf="(valmi || valfi) && !eval" class="form-group text-center" >
+     <div *ngIf="(valmi || valfi)  && !val " class="form-group text-center" >
       <button  class="btn btn-lg btn-primary "  (click)="Valider()"> 
          Valider
       </button>
@@ -205,7 +172,7 @@
 
           <div class="col-md-3 my form-group">
           <label>Date </label>
-            <input type="date"  class="form-control"  
+            <input type="date:'dd/MM/yyyy'"  class="form-control"  
               [(ngModel)]="datevalid"  readonly  >
           </div>
 
@@ -220,13 +187,9 @@
                 <input  type="text" class="form-control"  readonly >
             </div>
        </div>
-      
-</div>
-</div>
-</div>
 
-<h2 class="font-weight-bold my-2" >Aptitudes, attitudes et objectifs du projet personnels</h2>
-<div>
+       <h3 class="font-weight-bold my-2" >Aptitudes, attitudes et objectifs du projet personnels</h3>
+  <div>
   <div  class="col align-self-end my form-group">
     <label for="echeance"> Points forts</label>
     <input type="text" id="echeance" class="form-control"  [(ngModel)]="fort" readonly >
@@ -238,3 +201,11 @@
   </div>
 </div>
 </div>
+      
+</div>
+</div>
+</div>
+
+<div *ngIf="valmidep" class="form-group text-center" >
+  <button class="btn btn-success" (click)="downloadPDF()" >Télécharger</button>
+  </div>

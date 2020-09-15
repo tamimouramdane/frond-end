@@ -18,6 +18,7 @@ import { ValidationService } from '../services/Validation.service';
 import { Validation } from '../models/Validation.model';
 import * as jspdf from 'jspdf';  
 import html2canvas from 'html2canvas';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-validation',
@@ -47,13 +48,17 @@ export class ValidationComponent implements OnInit {
   responsable: Employe;
   selectedDevice: any;
   visa;  eval:boolean;
-  datevalid; commencol;
+  datevalid :Date ;
+   commencol;
   selectedDev;
   amel; fort;
   etape: any;
   commenresp;
   valExistante: Validation;
-  datevalidcol;
+  datevalidcol  ;
+  val: boolean;
+  typeval: number;
+  datefau: boolean;
   constructor(private route: ActivatedRoute, private formBuilder: FormBuilder ,
     private employeService:EmployeService, private evaluationService:EvaluationService,
     private tokenStorageService:TokenStorageService,
@@ -63,10 +68,10 @@ export class ValidationComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    this.datevalid=new Date().getDate();  new Date()
+  
     this.id= this.tokenStorageService.getUser().id;
     this.employeService.getEmployeUser(Number(this.id)).subscribe(emp => {
-    this.resp=emp.nom.toUpperCase() +' '+emp.prenom;  console.log('aqaa');
+    this.resp=emp.nom.toUpperCase() +' '+emp.prenom;  
     },
     err =>{
       console.log(err.error.message);  
@@ -92,7 +97,19 @@ export class ValidationComponent implements OnInit {
 
      this.validationService.getValidation(emp.codeEmploye).subscribe(val=>{
      this.valExistante=val;
-     if(val){ }
+     if(val){
+       this.datevalidcol= val.dateCol ;  
+       this.commencol=val.commentaireCol;
+       if(val.valResp){
+        this.datevalid = val.dateResp;
+      //   this.datevalid  = new DatePipe('en-US').transform(val.dateResp , 'dd/MM/yyyy'); console.log(this.datevalid);
+         this.commenresp= val.commentaireResp;
+         this.fort= val.pointFrot;
+         this.amel = val.pointAm;
+         this.val=true;
+       }
+      
+      }
      },
      err=>{
       console.log(err.error.message);  
@@ -121,6 +138,7 @@ export class ValidationComponent implements OnInit {
     }
   if(phase.etape== 6){
     this.valmi=true;
+  
    }
         else{
       
@@ -149,18 +167,44 @@ export class ValidationComponent implements OnInit {
   }
 
   Valider(){
-    this.eval=true; console.log(this.eval);
-  /*
-    if(this.etape == 6){
-      this.validation= new Validation(this.coll, this.datevalid,0 ,true ,null ,null,null,
-        null, this.date, this.fort, this.amel );
-    }
+   if(!this.datevalid){
+     this.datefau=true;
+   }
+  else{
 
-    if(this.etape == 8){
-      this.validation= new Validation(this.coll, this.datevalid,0 ,true ,null ,null,null,
-        null, this.date, this.fort, this.amel );
+      if( this.valExistante){
+        console.log('existe');
+      this.valExistante.dateResp=this.datevalid;
+      this.valExistante.valResp = true;
+      this.valExistante.pointAm= this.amel;
+      this.valExistante.pointFrot= this. fort;
+      this.valExistante.commentaireResp =this.commenresp
+      this.validationService.updateValidation(this.valExistante).subscribe(rsl=>{
+        this.ngOnInit();
+      },
+      err=>{
+        console.log(err.error.message); 
+      });
+      }
+      else{
+        if(this.etape == 6){
+            this.typeval=0; 
+        }else{
+          this.typeval=1;
+        }
+        console.log('n existe pas');
+        this.validation= new Validation(this.collab ,this.typeval, null,this.datevalid, null,null,this.commenresp, null,true
+          , this.date , this.fort , this. amel );
+          console.log(this.validation);
+          this.validationService.createValidation(this.validation).subscribe(rsl=>{
+            this.ngOnInit();
+          },
+          err=>{
+            console.log(err.error.message); 
+          });
+      }
+    
     }
-  */
   }
   
   onChangeDev(e){

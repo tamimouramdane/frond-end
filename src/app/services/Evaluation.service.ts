@@ -34,6 +34,10 @@ export class EvaluationService {
     return this.http.get<Ponderation[]>(this.baseUrl+'/allPonderation/'+codeemploye);
   }
 
+  getTro(codeemploye: number): Observable<number> {
+    return this.http.get<number>(this.baseUrl+'/getTRG/'+codeemploye);
+  }
+
   createPonderation(ponderation: Ponderation): Observable<Ponderation> {
     return this.http.post<Ponderation>(this.baseUrl+'/addPonderation', ponderation);
   }
@@ -62,6 +66,10 @@ deleteEvaluation(CodeEvaluation: number) {
 }
 deleteEvaluationInd(CodeEvaluation: number) {
   return this.http.delete<EvaluationIndividuelle>(this.baseUrl + '/deleteEI/'+CodeEvaluation);
+}
+
+getSommePond(codeemploye:number) : Observable<number>{
+return this.http.get<number>(this.baseUrl + '/getSommePonderations/'+ codeemploye);
 }
 
 deleteAll() {

@@ -13,6 +13,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
 import {MatFormFieldControl} from '@angular/material/form-field'
 import { MatPaginator} from '@angular/material/paginator';
+import { ValidationService } from '../services/Validation.service';
+import { PhaseService } from '../services/phase.service';
 
 @Component({
   selector: 'app-employe-list',
@@ -34,7 +36,7 @@ export class EmployeListComponent implements OnInit {
   errorMessage = '';
    loading = false;
    submitted = false;
-   displayedColumns: string[] = ['Numemploye', 'nom', 'prenom','posteoccupe','responsable','validation','action1','action2'];
+   displayedColumns: string[] = ['Numemploye', 'nom', 'prenom','posteoccupe','responsable','action1','action2'];
    @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
    @ViewChild(MatSort, {static: true}) sort: MatSort;
    dataSource ;
@@ -44,10 +46,11 @@ export class EmployeListComponent implements OnInit {
    selectedposte; selectedresp; 
    usernameexiste;  emailexiste;
    @ViewChild('callAPIDialog') callAPIDialog: TemplateRef<any>;
+  etape: number;
   constructor(private formBuilder: FormBuilder,
             private employeService: EmployeService, private router: Router,
               private posteService:PosteService, private authService: AuthService
-              ,private dialog: MatDialog
+              ,private dialog: MatDialog, private validationService: ValidationService, private phaseService :PhaseService
              ) { }
 
    callAPI(element) {
@@ -85,7 +88,16 @@ export class EmployeListComponent implements OnInit {
     this.posteService.getAllPostes().subscribe(postes => {
       this.postes = postes;  
     });
-
+ 
+   this.phaseService.getPhase().subscribe(phase=>{
+      this.etape=phase.etape;
+      if(phase.etape >=6){
+      
+      }
+   },
+   err=>{
+     
+   })
     
   }
   
@@ -251,4 +263,18 @@ export class EmployeListComponent implements OnInit {
   onChangeresp(e){
   this.selectedresp=e;
   }
+/*
+  valEmp(employe :Employe):string{
+    this.validationService.getValidation(employe.codeEmploye).subscribe(val=>{
+    if(val.valCol && val.valResp){console.log("valide"); return "Validé";  }
+    else{console.log("non valide"); return "En cours de validation"; } 
+    },
+    err => {
+      this.errorMessage = err.error.message;
+      console.log('erreur  '+ this.errorMessage);
+      return "En cours de validation";
+    });
+    return "En cours de validation";
+  }
+  */
 }

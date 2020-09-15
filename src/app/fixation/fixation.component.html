@@ -25,10 +25,12 @@
           <input type="text" id="ponderation" class="form-control" formControlName="ponderation" placeholder="ponderation" 
           [ngClass]="{ 'is-invalid': submitted && f.ponderation.errors, 'is-valid': submitted && f.ponderation.valid}" 
           (change) = "eventHandler()"  >
-          <div *ngIf="pondjuste && submitted && f.ponderation.errors  " class="alert alert-danger my-2" >
+          <div *ngIf=" submitted && f.ponderation.errors  " class="alert alert-danger my-2" >
             Ce champ est obligatoire</div> 
             <div *ngIf="pondfausse || submitted && f.ponderation.errors " class="alert alert-danger my-2" >
               Veuillez saisir un nombre entre 1 et 100</div> 
+              <div *ngIf="sommefausse || submitted && f.ponderation.errors " class="alert alert-danger my-2" >
+                La somme de toutes les pondérations ne doit pas dépasser 100%</div> 
         </div>
        
       </div>
@@ -90,8 +92,6 @@
       <button mat-button matDialogClose="yes" class=" col btn btn-danger pull-right">Supprimer</button>
   </mat-dialog-actions>
 </ng-template>
-
-
 
 <!--
 <h1 class="card-title mt-3"> Objectifs Collectifs </h1>   
@@ -161,8 +161,6 @@
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
 -->
-
-
 
 
 <div>
@@ -248,61 +246,8 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
         </table>
       </div>
-    <!--
-    <div *ngIf="ponderations && ponderations.length>0" class="mat-elevation-z8 table-responsive my-3">
-
-      <table mat-table matSort [dataSource]="dataSource1"  >
-         <ng-container matColumnDef="typeobjectif">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Type Objectif </th>
-          <td  mat-cell *matCellDef="let element index as i;">
-            <span *ngIf="element && element.objectif && !element.objectif.position "> Groupe</span>
-            <span *ngIf="element && element.objectif && element.objectif.position && element.objectif.position.type=='division' ">
-               Division</span>
-            <span *ngIf="element && element.objectif && element.objectif.position && element.objectif.position.type=='filiale' "> 
-              Filiale</span>
-           
-          </td>   
-        </ng-container>
-    
-        <ng-container matColumnDef="intituledivfil">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Intitulé Division <br> /Filiale</th>
-          <td  mat-cell *matCellDef="let element index as i;">
-            <span *ngIf="element &&  element.objectif && !element.objectif.position "> Groupe</span>
-            <span *ngIf="element &&  element.objectif && element.objectif.position && element.objectif.position.type=='division' ">
-              {{element.objectif.position.intitulePosition}}  </span>
-            <span *ngIf="element &&  element.objectif && element.objectif.position && element.objectif.position.type=='filiale' "> 
-              {{element.objectif.position.intitulePosition}} </span>
-           
-          </td>   
-        </ng-container>
-        
-        <ng-container matColumnDef="objectif">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Intitulé Objectif </th>
-          <td  mat-cell *matCellDef="let element index as i;"> {{element.objectif.nomObjectif}} 
-          </td>   
-        </ng-container>
-
-        <ng-container matColumnDef="ponderation">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Pondération </th>
-          <td mat-cell *matCellDef="let element index as i;">  {{element.ponderation}} 
-          </td>
-        </ng-container>
-    
-        <ng-container matColumnDef="plandaction">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Plan d'action </th>
-          <td mat-cell *matCellDef="let element index as i;">
-              {{element.plandaction}}
-          </td>
-        </ng-container>
- 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
-      </table>
-     
-    </div>
-    -->
-    <h1 class="mt-3 mb-2" >OBJECTIFS INDIVIDUELS </h1>
   
+    <h1 class="mt-3 mb-2" >OBJECTIFS INDIVIDUELS </h1>
     <div *ngIf="!objdep" class="alert alert-danger my-2" >
       Vous pouvez fixer les objectifs individuels seulement dans l'etape 3 (debut de fixation...) </div>  
     <button  type="button" class="my btn btn-success my-2" (click)="ajouterObjectif()" *ngIf="!add && objind"
@@ -327,6 +272,8 @@
       <td  mat-cell *matCellDef="let element index as i;">
         <span *ngIf="element.objectif && enableEditIndex !==i"> {{element.objectif.nomObjectif}} </span>
         <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table"  type="text"  [(ngModel)]="intituleObjectif" required >
+        <div *ngIf="enableEdit && enableEditIndex ==i && intituleObjectif==''" class="alert alert-danger my-2" >
+          Ce champ est obligatoire</div> 
       </td>
   
       
@@ -338,6 +285,12 @@
       <td mat-cell *matCellDef="let element index as i;">
         <span *ngIf="enableEditIndex !==i && element.ponderation">  {{element.ponderation}} <span>%</span> </span>
         <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="ponderation" required >
+        <div *ngIf="enableEdit && enableEditIndex ==i && pondfaussemod " class="alert alert-danger my-2" >
+          Veuillez saisir un nombre entre 1 et 100</div> 
+          <div *ngIf="enableEdit && enableEditIndex ==i && sommefaussemod " class="alert alert-danger my-2" >
+            La somme de toutes les pondérations ne doit pas dépasser 100%</div> 
+            <div *ngIf="enableEdit && enableEditIndex ==i && ponderation==''" class="alert alert-danger my-2" >
+              Ce champ est obligatoire</div> 
       </td>
     </ng-container>
   
@@ -347,6 +300,8 @@
       <td mat-cell *matCellDef="let element index as i;">
         <span *ngIf="enableEditIndex !==i">  {{element.planAction}} </span>
         <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="plandaction" required >
+        <div *ngIf="enableEdit && enableEditIndex ==i && plandaction==''" class="alert alert-danger my-2" >
+          Ce champ est obligatoire</div> 
       </td>
     </ng-container>
 
@@ -355,6 +310,8 @@
       <td mat-cell *matCellDef="let element index as i;">
         <span *ngIf="enableEditIndex !==i">  {{element.kpi}} </span>
         <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="kpieva" required >
+        <div *ngIf="enableEdit && enableEditIndex ==i && kpieva==''" class="alert alert-danger my-2" >
+          Ce champ est obligatoire</div> 
       </td>
     </ng-container>
 
@@ -363,6 +320,8 @@
       <td mat-cell *matCellDef="let element index as i;">
         <span *ngIf="enableEditIndex !==i">  {{element.cible}} </span>
         <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="cible" required >
+        <div *ngIf="enableEdit && enableEditIndex ==i && cible==''" class="alert alert-danger my-2" >
+          Ce champ est obligatoire</div> 
       </td>
     </ng-container>
 
@@ -393,6 +352,7 @@
           <mat-icon >launch</mat-icon>Modifier</button>
         
       </td>
+      
     </ng-container>
 
     <ng-container   matColumnDef="action2">
@@ -404,10 +364,16 @@
     </ng-container>
   
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;" ></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" > </tr>
   </table>
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
 
+<div class="row my-3">
+<div  class="col-3 align-self-end my form-group">
+  <label  for="echeance">Somme des pondérations</label>
+  <input type="text" id="echeance" class="form-control"  [(ngModel)]="sommepond" readonly >
+</div>
+</div>
  
 

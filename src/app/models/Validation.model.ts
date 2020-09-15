@@ -4,17 +4,18 @@ import { Evaluation } from './Evaluation.model';
 export class Validation {
     constructor(
         public employe : Employe,
+        public typeVal:number,
         public dateCol : Date,
         public dateResp : Date,
-        public typeVal:number,
-        public valRespMi :boolean,
-        public valRespFin : boolean,
-        public valColMi :boolean,
-        public valColFin : boolean,
         public tro: number,
+        public commentaireCol:string,
+        public commentaireResp:string,
+        public valCol :boolean,
+        public valResp :boolean,
         public anneeVal : number,
         public pointFrot ? :string,
         public pointAm ?:string,
         public codeValidation ? : number
  ){}
 }
+

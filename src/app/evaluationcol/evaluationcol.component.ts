@@ -75,6 +75,12 @@ evaluations:Array<EvaluationIndividuelle>=new Array<EvaluationIndividuelle>();
         this.dataSource.sort = this.sort;
          this.evaluations=evas;   console.log(emp);
          });
+         this.evaluationService.getTro(emp.codeEmploye).subscribe(tro=>{
+          this.tro=tro;
+        },
+        err=>{
+  
+        });
      });
 
      this.phaseService.getPhase().subscribe(phase => {

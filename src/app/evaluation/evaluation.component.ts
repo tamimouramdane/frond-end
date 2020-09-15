@@ -77,6 +77,12 @@ evaluations:Array<EvaluationIndividuelle>=new Array<EvaluationIndividuelle>();
       this.dataSource.sort = this.sort;
       this.evaluations=evas;
       });
+      this.evaluationService.getTro(emp.codeEmploye).subscribe(tro=>{
+        this.tro=tro;
+      },
+      err=>{
+
+      });
   }  );
   this.phaseService.getPhase().subscribe(phase => {  this.etape=phase.etape;
     if(phase.date>0){

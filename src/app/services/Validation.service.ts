@@ -12,7 +12,7 @@ export class ValidationService {
   constructor(private http: HttpClient) { }
 
   getValidation(codeemploye: number): Observable<Validation> {
-    return this.http.get<Validation>(this.baseUrl+'/get/'+codeemploye);
+    return this.http.get<Validation>(this.baseUrl+'/getByPhase/'+codeemploye);
   }
    
   createValidation(validation: Validation): Observable<Validation> {

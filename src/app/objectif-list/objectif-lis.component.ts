@@ -24,6 +24,7 @@ import { EmployeService } from '../services/Employe.service';
 import { Employe } from '../models/Employe.model';
 import { PhaseService } from '../services/phase.service';
 import { Ponderation } from '../models/Ponderation.model';
+import { ValidationService } from '../services/Validation.service';
 @Component({
   selector: 'app-objectif-list',
   templateUrl: './objectif-list.component.html',
@@ -68,7 +69,7 @@ export class ObjectifListComponent implements OnInit {
    objectifexiste:boolean;
    objcoll:boolean;
    emp:Employe;
- 
+   sommepond:number;
    displayedColumns: string[] = ['typeobjectif','intituledivfil','objectif','ponderation','plandaction'];
    @ViewChild('paginator', {static: true}) paginator: MatPaginator;
    @ViewChild(MatSort, {static: true}) sort: MatSort;
@@ -109,10 +110,16 @@ export class ObjectifListComponent implements OnInit {
   choisi: boolean;
   nonchoisi: boolean;
   echeancierDeRealisation: any;
+  champnonremp: boolean;
+  pondfaussemod: boolean;
+  sommefaussemod: boolean;
+  lastpond: number;
+  validation: string;
   constructor(private formBuilder: FormBuilder,private divisionService: DivisionService, 
     private router:Router,private filialeService: FilialeService,
     private objectifService : ObjectifService, private evaluationService:EvaluationService
-    ,private dialog: MatDialog,private employeService: EmployeService,private phaseService:PhaseService){ 
+    ,private dialog: MatDialog,private employeService: EmployeService,private phaseService:PhaseService ,
+    private validationService: ValidationService){ 
      
     }
 
@@ -295,6 +302,21 @@ onChange(newValue) {
       this.evaluations=evas;     console.log('ajout');
     });
 
+    this.evaluationService.getSommePond(this.emp.codeEmploye).subscribe(som=>{
+      this.sommepond=som;
+      },
+      err =>{
+        console.log(err.error.message);  
+       });
+       this.validationService.getValidation(this.emp.codeEmploye).subscribe(val=>{
+        if(val.valCol && val.valResp){console.log("valide");  this.validation="Validé"; }
+        else{console.log("non valide");  this.validation="En cours de validation";  } 
+        },
+        err => {
+          this.errorMessage = err.error.message;
+          console.log('erreur  '+ this.errorMessage);
+          this.validation="En cours de validation"; 
+        });
  }
   
 }
@@ -600,8 +622,11 @@ this.evalFinale =   element.evalFinale;
 
   
   enableEditMethod(e, i,element) {
+    this.sommefaussemod= false;  
+    this.champnonremp=false;  this.pondfaussemod=false;
     if(element.objectif){ this.intituleObjectif=element.objectif.nomObjectif;  }
      this.ponderation=element.ponderation;
+     this.lastpond=element.ponderation;
      this.plandaction=element.planAction
      this.kpieva=element.kpi;
      this.cible=element.cible;
@@ -612,10 +637,18 @@ this.evalFinale =   element.evalFinale;
     }
   
     saveSegment(element){
-    if(this.intituleObjectif=='' ||this.ponderation=='' || this.plandaction =='' || this.kpieva=='' 
-      || this.cible==''||this.echeancierDeRealisation==''){
-      
+      if(this.intituleObjectif=='' ||this.ponderation=='' || this.plandaction =='' || this.kpieva=='' 
+      || this.cible=='' ){
+        this.champnonremp=true;   
       }else{
+        if(isNaN(Number(this.ponderation)) || Number(this.ponderation) > 100 || Number(this.ponderation) < 0){
+          this.pondfaussemod=true;
+        }
+      else{
+          if(Number(this.sommepond) + Number(this.ponderation) - Number(this.lastpond) > 100){
+            this.sommefaussemod=true;
+        }else{
+          this.sommepond=Number(this.sommepond) +Number(this.ponderation) - Number(this.lastpond);
         element.objectif.nomObjectif=this.intituleObjectif;
         element.ponderation=this.ponderation;
         element.planAction =this.plandaction;
@@ -623,7 +656,7 @@ this.evalFinale =   element.evalFinale;
         element.cible=this.cible;
         element.echeancierDeRealisation=this.echeancierDeRealisation;
         this.objectifService.updateObjectif( element.objectif).subscribe(eva => {
-       
+           
        },
        err => {
          this.errorMessage = err.error.message;
@@ -640,8 +673,10 @@ this.evalFinale =   element.evalFinale;
       this.enableEditIndex = null;
     }
     }
+      }
+    }
+
     cancel(i){
- 
       this.enableEdit = false;
       this.enableEditIndex = null;
     }

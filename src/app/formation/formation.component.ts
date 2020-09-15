@@ -45,7 +45,7 @@ export class FormationComponent implements OnInit {
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   dataSource ;
   formationspass:Array<Formation>=new Array<Formation>();
-  displayedColumns1: string[]= ['NumFormation', 'nomFormation','objectifPrevu','evalColl','evalResp'];
+  displayedColumns1: string[]= ['NumFormation', 'nomFormation','objectifPrevu','evalColl','evalResp','justification'];
   dataSource1 ;
   enableEdit=false;
   enableEditIndex; 

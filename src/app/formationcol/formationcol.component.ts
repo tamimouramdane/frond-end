@@ -32,7 +32,7 @@ export class FormationcolComponent implements OnInit {
   objinddep: boolean;
   errsaisi: boolean;
   formationspass:Array<Formation>=new Array<Formation>();
-  displayedColumns1: string[]= ['NumFormation', 'nomFormation','objectifPrevu'];
+  displayedColumns1: string[]= ['NumFormation', 'nomFormation','objectifPrevu','evalColl','evalResp','justification'];
   dataSource1 ;
   objectifs:Array<EvaluationIndividuelle>=new Array<EvaluationIndividuelle>();
   add:boolean;
@@ -41,7 +41,7 @@ export class FormationcolComponent implements OnInit {
   errorMessage = '';
   loading = false;
   submitted = false;
-  displayedColumns: string[] = ['NumFormation', 'nomFormation','objectifPrevu','action1'];
+  displayedColumns: string[] = ['NumFormation', 'nomFormation','objectifPrevu','demande','action1'];
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   dataSource ;
@@ -91,7 +91,21 @@ export class FormationcolComponent implements OnInit {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.formations=formations;
+    },
+    err =>{
+      console.log( this.errorMessage);
+    });
+
+      this.formationService.getFormationPas(emp.codeEmploye).subscribe(foms =>{
+        this.dataSource1  = new MatTableDataSource<Formation>(foms);
+        this.formationspass=foms;
+      },
+      err =>{
+        console.log( this.errorMessage);
       });
+    },
+    err =>{
+      console.log( this.errorMessage);
     });
     this.phaseService.getPhase().subscribe(phase => {
       if(phase.date>0){
@@ -100,18 +114,18 @@ export class FormationcolComponent implements OnInit {
       if(phase.etape >=3 && phase.etape <=8){
         if(phase.etape == 3){
           this.objind=true;
-          this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu'];
+          this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu','demande'];
         }else{
           this.objind=false;
         }
         if(phase.etape>=4 && phase.etape <=6){
-          this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu'];
+          this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu','demande'];
         }
         if(phase.etape == 7){
-          this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu','evalColl','evalResp','jusification','action1'];
+          this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu','demande','evalColl','evalResp','jusification','action1'];
         }
         if(phase.etape >=8){
-          this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu','evalColl','evalResp','jusification'];
+          this.displayedColumns= ['NumFormation', 'nomFormation','objectifPrevu','demande','evalColl','evalResp','jusification'];
         }
         this.objinddep=true;
       }

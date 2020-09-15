@@ -305,8 +305,14 @@
         <span *ngIf="!fix ">  {{element.ponderation}} </span>
        
         <input *ngIf="fix && i==0" class="input-table" type="text" [(ngModel)]="pond1" required >
-        <input *ngIf="fix && i==1" class="input-table" type="text" [(ngModel)]="pond2" required >
+        <div *ngIf="pond1==''" class="alert alert-danger my-2" >
+          Ce champ est obligatoire</div> 
+        <input *ngIf="fix && i==1" class="input-table" type="text" [(ngModel)]="pond2" required > 
+        <div *ngIf="pond2==''" class="alert alert-danger my-2" >
+          Ce champ est obligatoire</div> 
         <input *ngIf="fix && i==2" class="input-table" type="text" [(ngModel)]="pond3" required >
+        <div *ngIf="pond3==''" class="alert alert-danger my-2" >
+          Ce champ est obligatoire</div> 
       </td>
     </ng-container>
 
@@ -314,10 +320,15 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Plan d'action </th>
       <td mat-cell *matCellDef="let element index as i;">
         <span *ngIf="!fix">  {{element.plandaction}} </span>
-
         <input *ngIf="fix && i==0" class="input-table" type="text" [(ngModel)]="action1" required >
+        <div *ngIf="action1==''" class="alert alert-danger my-2" >
+          Ce champ est obligatoire</div> 
         <input *ngIf="fix && i==1" class="input-table" type="text" [(ngModel)]="action2" required >
+        <div *ngIf="action2==''" class="alert alert-danger my-2" >
+          Ce champ est obligatoire</div> 
         <input *ngIf="fix && i==2" class="input-table" type="text" [(ngModel)]="action3" required >
+        <div *ngIf="action3==''" class="alert alert-danger my-2" >
+          Ce champ est obligatoire</div> 
       </td>
     </ng-container>
 
@@ -420,7 +431,7 @@
 </div>
 
 <div *ngIf=" evaluations && evaluations.length >0 " class="mat-elevation-z8">
-  
+  <h2 class="mx-3 my-3" >OBJECTIFS INDIVIDUELS  </h2>
   <mat-form-field class="mat-form-field ml-2 mt-2" >
     <mat-label><mat-icon class="mr-1 ">search</mat-icon>Recherche</mat-label>
     <input matInput (keyup)="applyFilter($event)" placeholder="Ex.division1" >
@@ -443,12 +454,17 @@
       
     </ng-container>
   
-   
     <ng-container matColumnDef="ponderation">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Pondération </th>
       <td mat-cell *matCellDef="let element index as i;">
         <span *ngIf="enableEditIndex !==i && element.ponderation">  {{element.ponderation}} <span>%</span> </span>
         <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="ponderation" required >
+        <div *ngIf="enableEdit && enableEditIndex ==i && pondfaussemod " class="alert alert-danger my-2" >
+          Veuillez saisir un nombre entre 1 et 100</div> 
+          <div *ngIf="enableEdit && enableEditIndex ==i && sommefaussemod " class="alert alert-danger my-2" >
+            La somme de toutes les pondérations ne doit pas dépasser 100%</div> 
+            <div *ngIf="enableEdit && enableEditIndex ==i && ponderation==''" class="alert alert-danger my-2" >
+              Ce champ est obligatoire</div> 
       </td>
     </ng-container>
   
@@ -458,6 +474,8 @@
       <td mat-cell *matCellDef="let element index as i;">
         <span *ngIf="enableEditIndex !==i">  {{element.planAction}} </span>
         <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="plandaction" required >
+        <div *ngIf="enableEdit && enableEditIndex ==i && plandaction==''" class="alert alert-danger my-2" >
+          Ce champ est obligatoire</div> 
       </td>
     </ng-container>
 
@@ -466,6 +484,8 @@
       <td mat-cell *matCellDef="let element index as i;">
         <span *ngIf="enableEditIndex !==i">  {{element.kpi}} </span>
         <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="kpieva" required >
+        <div *ngIf="enableEdit && enableEditIndex ==i && kpieva==''" class="alert alert-danger my-2" >
+          Ce champ est obligatoire</div> 
       </td>
     </ng-container>
 
@@ -474,14 +494,16 @@
       <td mat-cell *matCellDef="let element index as i;">
         <span *ngIf="enableEditIndex !==i">  {{element.cible}} </span>
         <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="cible" required >
+        <div *ngIf="enableEdit && enableEditIndex ==i && cible==''" class="alert alert-danger my-2" >
+          Ce champ est obligatoire</div> 
       </td>
     </ng-container>
 
     <ng-container matColumnDef="echeancierDeRealisation">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Echeancier <br> De Realisation </th>
       <td mat-cell *matCellDef="let element index as i;" >
-        <span *ngIf="enableEditIndex !==i" class="ml-3">  {{element.echeancier | date:'dd/MM/yyyy' }}  </span>
-        <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="text" [(ngModel)]="echeancierDeRealisation" required >
+        <span *ngIf="enableEditIndex !==i" class="ml-3">  {{element.echeancier  | date:'dd/MM/yyyy' }} </span>
+        <input *ngIf="enableEdit && enableEditIndex ==i" class="input-table" type="date" [(ngModel)]="echeancierDeRealisation" required >
       </td>
     </ng-container>
 
@@ -513,6 +535,19 @@
   </table>
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
+<div class="row my-3">
+  <div  class="col-3 align-self-end my form-group">
+    <label  for="echeance">Somme des pondérations</label>
+    <input type="text" id="echeance" class="form-control"  [(ngModel)]="sommepond" readonly >
+  </div>
+  </div>
+
+  <div class="row my-3">
+    <div  class="col-3 align-self-end my form-group">
+      <label  >Validation</label>
+      <input type="text" class="form-control"  [(ngModel)]="validation" readonly >
+    </div>
+    </div>
 
 </div>
 </div>

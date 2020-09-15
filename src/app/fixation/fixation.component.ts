@@ -79,6 +79,11 @@ evaluations:Array<EvaluationIndividuelle>=new Array<EvaluationIndividuelle>();
   objectifexiste: boolean;
   objdep: boolean;
   pondfausse: boolean;
+  sommefausse: boolean;
+  sommepond: number;
+  champnonremp: boolean;
+  sommefaussemod: boolean;
+  pondfaussemod: boolean;
   constructor(private route: ActivatedRoute, private formBuilder: FormBuilder ,
     private employeService:EmployeService, private evaluationService:EvaluationService
     , private evaluationService2:EvaluationService,private tokenStorageService:TokenStorageService,
@@ -131,6 +136,13 @@ callAPI(element) {
       this.dataSource.sort = this.sort;
         this.evaluations=evas;     console.log('ajout');
       });
+      this.evaluationService.getSommePond(emp.codeEmploye).subscribe(som=>{
+      this.sommepond=som;
+      },
+      err =>{
+        console.log(err.error.message);  
+       });
+      
   },
   err => { 
     this.errorMessage = err.error.message;
@@ -204,12 +216,18 @@ callAPI(element) {
    
       this.objectifForm.controls['ponderation'].setErrors({required:true});
     }
-    /*
+    
     if(isNaN(Number(formValue['ponderation'])) || Number(formValue['ponderation'])>100 || Number(formValue['ponderation']) < 1 ){
       this.pondjuste=false;
       this.objectifForm.controls['ponderation'].setErrors({maxlength:true});
+      
     }
-    */
+    
+   if(this.sommepond + Number(formValue['ponderation']) > 100){
+     this.sommefausse=true;
+    this.objectifForm.controls['ponderation'].setErrors({maxlength:true});
+   }
+
     if(formValue['plandaction'].replace(/\s/g, "") ==="" ){
       this.objectifForm.controls['plandaction'].setErrors({required:true});
      
@@ -274,12 +292,13 @@ callAPI(element) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  enableEditMethod(e, i,element) {/*
-  this.divisions[i]=new Division(this.codeDivision,this.intitulePosition,'division');*/
+  enableEditMethod(e, i,element) {
+    this.sommefaussemod= false;  
+    this.champnonremp=false;  this.pondfaussemod=false;
   this.displayedColumns.pop();
   if(element.objectif){ this.intituleObjectif=element.objectif.nomObjectif;  }
    this.ponderation=element.ponderation;
-   this.plandaction=element.planAction
+   this.plandaction=element.planAction;
    this.kpieva=element.kpi;
    this.cible=element.cible;
    this.echeancierDeRealisation=element.echeancier;
@@ -290,17 +309,23 @@ callAPI(element) {
 
   saveSegment(element){
   if(this.intituleObjectif=='' ||this.ponderation=='' || this.plandaction =='' || this.kpieva=='' 
-    || this.cible==''){
-    
+    || this.cible=='' ){
+      this.champnonremp=true;   
     }else{
+      if(isNaN(Number(this.ponderation)) || Number(this.ponderation) > 100 || Number(this.ponderation) < 0){
+        this.pondfaussemod=true;
+      }
+    else{
+        if(this.sommepond + Number(this.ponderation) > 100){
+          this.sommefaussemod=true;
+      }else{
       element.objectif.nomObjectif=this.intituleObjectif;
       element.ponderation=this.ponderation;
       element.planAction =this.plandaction;
       element.kpi=this.kpieva;
       element.cible=this.cible;
       element.echeancier=this.echeancierDeRealisation;
-      this.objectifService.updateObjectif( element.objectif).subscribe(eva => {
-       
+      this.objectifService.updateObjectif( element.objectif).subscribe(eva => {  
       },
       err => {
         this.errorMessage = err.error.message;
@@ -317,7 +342,10 @@ callAPI(element) {
     this.enableEditIndex = null;
   }
   }
+}
+  }
   cancel(i){
+  
     this.displayedColumns.push('action2');
     this.enableEdit = false;
     this.enableEditIndex = null;
@@ -327,15 +355,18 @@ callAPI(element) {
   }
 
   eventHandler(){
-  console.log(  this.f.ponderation.value );
   if(this.f.ponderation.value== "" || isNaN(Number(this.f.ponderation.value))  
-  || this.f.ponderation.value <=0 || this.f.ponderation.value >100){
+  || this.f.ponderation.value <=0 || this.f.ponderation.value >100 ){
     this.pondfausse =true;
+    return;
   }
-  else{
-    this.pondfausse =false;
+  if( this.sommepond + Number(this.f.ponderation.value) > 100 ){
+   this.sommefausse= true; 
+   return;
   }
+  this.pondfausse =false;
+  this.sommefausse= false;
+ 
   }
-
 }
 
