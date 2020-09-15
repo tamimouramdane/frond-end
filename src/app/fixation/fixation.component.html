@@ -369,11 +369,11 @@
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
 
-<div class="row my-3">
-<div  class="col-3 align-self-end my form-group">
-  <label  for="echeance">Somme des pondérations</label>
-  <input type="text" id="echeance" class="form-control"  [(ngModel)]="sommepond" readonly >
-</div>
-</div>
+<div *ngIf=" ponderations && ponderations.length>0" class="row my-3">
+  <div  class="col-3 align-self-end my form-group">
+    <label  for="echeance">Somme des pondérations</label>
+    <input type="text" id="echeance" class="form-control"  [(ngModel)]="sommepond" readonly >
+  </div>
+  </div>
  
 

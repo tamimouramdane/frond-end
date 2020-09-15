@@ -140,7 +140,7 @@
    
           <div class="col-md-3 my form-group">
           <label>Date </label>
-            <input type="date"  class="form-control"  
+            <input type="date"   class="form-control"  
               [(ngModel)]="datevalidcol"  [readonly]="(!valmi && !valfi)  || val" >
           </div>
 
@@ -172,7 +172,7 @@
 
           <div class="col-md-3 my form-group">
           <label>Date </label>
-            <input type="date:'dd/MM/yyyy'"  class="form-control"  
+            <input type="{{date |  date:'dd/MM/yyyy' }}"  class="form-control"  
               [(ngModel)]="datevalid"  readonly  >
           </div>
 

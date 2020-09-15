@@ -54,6 +54,8 @@
   
   <div>
   <h2 class="card-title my-2">Formations</h2>
+  <h2  class="my-0" *ngIf="coll"> <span class="text-uppercase"> {{   coll.nom  }} </span> {{coll.prenom}}</h2>
+  <h3 class="font-weight-bold mt-2" *ngIf="coll && coll.poste" >{{coll.poste.intitulePoste}}</h3>
   <div *ngIf="!objinddep" class="alert alert-danger my-2" >
     Vous pouvez fixer les formations seulement dans l'etape 3 (debut de fixation...) </div>  
   

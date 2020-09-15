@@ -235,16 +235,13 @@
   <mat-paginator #paginator1 [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
 </div>
-<!--
-<div *ngIf="objcoll" >   -->
-<div>
+
+<div *ngIf="objcoll" >  
 <h2 class="card-title my-3"> Objectifs Collectifs des employes </h2>  
 <div *ngIf="!objcollemp" class="alert alert-danger my-2" >
   Pour fixer les objectifs collectifs des employes il faudrait fixer tous les objectifs collectifs d'abord </div>  
-  <!--
-<div *ngIf="objcoll" >   
-<div *ngIf="objcollemp" class="my-2">-->
-  <div>
+ 
+<div *ngIf="objcollemp" class="my-2">
 <div >
   <label for="responsable"> Employe</label>
   <select class="form-control" id="employe" [ngModel]="selectedDevice" (ngModelChange)="onChange($event)"

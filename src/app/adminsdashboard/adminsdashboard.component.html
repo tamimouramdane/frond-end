@@ -40,7 +40,7 @@
                 <div class="form-inline justify-content-end m-2" >
                   <label  for="date" class="pr-1">Année</label>
                   <input type="number" class="form-control mr-2" style="width: 100px;" nom="date"  id="date" [(ngModel)]="date" 
-                  [readonly]="selectedDev > 1 && selectedDev < 11" 
+                  [readonly]="selectedDev > 1 && selectedDev < 11"   [min]="dateac"
                   [ngClass]="{ 'is-invalid': errdate}"   >   
                   <div *ngIf="errdate" class="alert alert-danger my-2" >Veuillez saisir une année supérieure à celle d'avant </div> 
                   <!-- 

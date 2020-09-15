@@ -26,6 +26,7 @@ changedate:boolean;
 selectedDev;
 etape:number;
 errdate:boolean=false;
+dateac;
   constructor(private userService: UserService,private router:Router,
     private tokenStorageService: TokenStorageService,private phaseService:PhaseService,
     public _location: Location) { }
@@ -38,6 +39,7 @@ errdate:boolean=false;
     }
 
   ngOnInit() {
+    this.dateac=new Date().getFullYear() - 1; 
     this.isLoggedIn = !!this.tokenStorageService.getToken();
     console.log(this.tokenStorageService.getUser());
     if (this.isLoggedIn) {
