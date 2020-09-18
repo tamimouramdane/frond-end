@@ -18,7 +18,7 @@ export class EvolutionComponent implements OnInit {
 
   selectedDev;
   submitted;
-  echeance: Date= new Date(12,11 ,1950);
+  echeance: Date;
   mobilite;
   poste;
   evolution:Evolution;

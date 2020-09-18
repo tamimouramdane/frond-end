@@ -104,12 +104,12 @@
 
 <h2 class="card-title mt-3"> Objectifs Collectifs </h2>     
 
-<div *ngIf="!objcoll" class="alert alert-danger my-2" >
+<div *ngIf="!objcolldep" class="alert alert-danger my-2" >
   Pour fixer les objectifs collectifs il faudrait être dans la phase  Fixation Objectifs Collectifs
 </div>  
 
-<div *ngIf="evaluations && evaluations.length>0">
-<div *ngIf="objcoll" class="mat-elevation-z8 table-responsive">
+<div >
+<div  class="mat-elevation-z8 table-responsive">
   
   <mat-form-field class="mat-form-field ml-2 mt-2" >
     <mat-label><mat-icon class="mr-1 ">search</mat-icon>Recherche</mat-label>
@@ -236,7 +236,7 @@
 </div>
 </div>
 
-<div *ngIf="objcoll" >  
+<div *ngIf="objcolldep" >  
 <h2 class="card-title my-3"> Objectifs Collectifs des employes </h2>  
 <div *ngIf="!objcollemp" class="alert alert-danger my-2" >
   Pour fixer les objectifs collectifs des employes il faudrait fixer tous les objectifs collectifs d'abord </div>  
@@ -302,13 +302,13 @@
         <span *ngIf="!fix ">  {{element.ponderation}} </span>
        
         <input *ngIf="fix && i==0" class="input-table" type="text" [(ngModel)]="pond1" required >
-        <div *ngIf="pond1==''" class="alert alert-danger my-2" >
+        <div *ngIf="i==0 && pond1===''" class="alert alert-danger my-2" >
           Ce champ est obligatoire</div> 
-        <input *ngIf="fix && i==1" class="input-table" type="text" [(ngModel)]="pond2" required > 
-        <div *ngIf="pond2==''" class="alert alert-danger my-2" >
+        <input *ngIf="i==1 && fix && i==1" class="input-table" type="text" [(ngModel)]="pond2" required > 
+        <div *ngIf="pond2===''" class="alert alert-danger my-2" >
           Ce champ est obligatoire</div> 
         <input *ngIf="fix && i==2" class="input-table" type="text" [(ngModel)]="pond3" required >
-        <div *ngIf="pond3==''" class="alert alert-danger my-2" >
+        <div *ngIf="i==3 && pond3===''" class="alert alert-danger my-2" >
           Ce champ est obligatoire</div> 
       </td>
     </ng-container>
@@ -333,14 +333,14 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
  
-  <div *ngIf="objcoll && objcollemp && !fix && elemch" class="form-group text-center my-3" >
+  <div *ngIf="objcolldep && objcollemp && !fix && elemch" class="form-group text-center my-3" >
     <button  class="btn btn-lg btn-primary "  (click)="Fixer()"> 
         Fixer 
     </button>
     
   </div>
   
-  <div *ngIf="fix" class=" my-3 form-group ">
+  <div *ngIf="fix" class=" my-3 mx-3 form-group ">
     <div *ngIf="!remptout" class="alert alert-danger my-2" >
       Veuillez fixer tous les objectifs collectifs de cet employe (pondération,plan d'action)   </div> 
       <div *ngIf="ponderr" class="alert alert-danger my-2" >

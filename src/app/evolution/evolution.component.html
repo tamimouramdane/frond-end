@@ -20,7 +20,7 @@
   </div>
   <div  class="col my form-group">
     <label for="echeance"> Echéance souhaitée</label>
-    <input type=" date:'dd/MM/yyyy' " id="echeance" class="form-control"  [(ngModel)]="echeance"  readonly>
+    <input type="{{date |  date:'dd/MM/yyyy' }}" id="echeance" class="form-control"  [(ngModel)]="echeance"  readonly>
   </div>
 
   <div class="form-group">

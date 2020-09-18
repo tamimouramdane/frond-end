@@ -102,6 +102,7 @@ export class ObjectifListComponent implements OnInit {
   sompond: boolean;
   choix: number;
   enableEditEval: boolean;
+  objcolldep : boolean;
   enableEditEvalIndex: any;
   phase: number;
   evalMiParcours: any;
@@ -162,6 +163,7 @@ export class ObjectifListComponent implements OnInit {
     if(this.evaluationGroupe){
     this.evas.push(this.evaluationGroupe);  }
     /*
+    
     for(let evaluation of this.evaluations){
       if(evaluation.objectif.position&&evaluation.objectif.position.type==='division'){ this.evas.push(evaluation)}
     }
@@ -205,9 +207,9 @@ export class ObjectifListComponent implements OnInit {
       this.date=phase.date;
     }
  
-      if(phase.etape >=3 && phase.etape <=10){
+      if(phase.etape >=3 && phase.etape <=8){
        
-        this.objcoll=true; 
+        this.objcolldep=true; 
         this.objcolfix=false;
         if(phase.etape <=4){
          this.displayedColumns1 = ['typeobjectif','intituledivfil','objectif','kpi','cible','action1'];
@@ -231,10 +233,12 @@ export class ObjectifListComponent implements OnInit {
       }
       else{
         if(phase.etape==2){
-          this.objcoll=true; 
+          this.objcoll=true;
+          this.objcolldep=true;  
         }
         else{
         this.objcoll=false;
+        this.objcolldep=false;  
         }
         this.objcolfix=true;
       }
@@ -268,7 +272,7 @@ onChange(newValue) {
   }
   var array = newValue.split(" -- ");
  this.emp= this.employes.find(employe => ( employe.nom == array[0] && employe.prenom == array[1]));
- console.log(this.emp);  
+
  if(this.emp){
  
    this.evaluationService.getAllPonderations(this.emp.codeEmploye).subscribe(ponds=>{
@@ -491,12 +495,12 @@ get f() { return this.objectifForm.controls; }
   }
 
   saveSegmentInd(element){
-    if(this.plandaction =='' ){
+    if(this.plandaction =='' ||  Number(this.sommepond) - Number(element.ponderation) + Number(this.ponderation) > 100 ){
 
-
+ 
     }
     else {
-     
+     this.sommepond= Number(this.sommepond)  - Number(element.ponderation) + Number(this.ponderation);
     element.ponderation=this.ponderation;
     element.planAction=this.plandaction;
 
@@ -524,7 +528,7 @@ get f() { return this.objectifForm.controls; }
 
   Enregistrer(){
  
-   if(Number(this.pond1) + Number(this.pond2) +Number(this.pond3)) {
+   if(Number(this.pond1) + Number(this.pond2) +Number(this.pond3)> 100 ) {
      this.sompond = false;
    }
    else{
